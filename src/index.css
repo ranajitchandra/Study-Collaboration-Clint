@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+
+/* @plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #0077B6;
+  --color-secondary: #90E0EF;
+  --color-accent: #FFB703;
+} */
+
+
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #7A785F;    /* muted sage green */
+  --color-secondary: #F8EEFA;  /* warm beige */
+  --color-accent: #8F8D6B;     /* same as secondary for subtle accent */
+}
+
+
+
+
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  color-scheme: "dark";
+  --color-primary: #00B4D8;
+  --color-secondary: #03045E;
+  --color-accent: #FFD166;
+}
+
+/* When theme is dark */
+[data-theme="dark"] a.active {
+  background-color: var(--color-primary);
+  /* Dark theme's primary color */
+  color: #ffffff;
+}
+
+/* When theme is light */
+[data-theme="light"] a.active {
+  background-color: var(--color-primary);
+  /* Light theme's primary color */
+  color: #ffffff;
+}
+
+/* a.active{
+  padding: 4px 20px;
+  background-color: #058538;
+  color: #ffffff;
+} */
+
+
+
+.plus {
+  position: absolute;
+  color: #0077B6;
+  font-size: 24px;
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+  animation: fall 1s ease-out forwards;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.5);
+  }
+}
