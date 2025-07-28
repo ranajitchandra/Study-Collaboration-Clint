@@ -6,7 +6,6 @@ import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import DashboardLayout from "../layouts/DashBoardLayout";
 import DashBoardHome from "../pages/dashboard/DashBoardHome";
-import CreateSession from "../pages/dashboard/tutor/CreateSession";
 import CreateStudySession from "../pages/dashboard/tutor/CreateStudySession";
 import MyStudySessions from "../pages/dashboard/tutor/MyStudySession";
 import UploadMaterials from "../pages/dashboard/tutor/UploadMaterials";
@@ -14,6 +13,7 @@ import ViewMaterialsBySession from "../pages/dashboard/tutor/ViewMaterialsBySess
 import ViewAllUsers from "../pages/dashboard/admin/ViewAllUsers";
 import PendingAllStudySessions from "../pages/dashboard/admin/AllStudySession";
 import UpdateStudySession from "../pages/dashboard/admin/UpdateStudySession";
+import AdminMaterialsList from "../pages/dashboard/admin/ViewAllMaterials";
 export const router = createBrowserRouter(
     [
         {
@@ -50,10 +50,6 @@ export const router = createBrowserRouter(
                 },
                 // Tutor
                 {
-                    path: "create-session",
-                    element: <CreateSession></CreateSession>
-                },
-                {
                     path: "create-study-session",
                     element: <CreateStudySession></CreateStudySession>
                 },
@@ -81,6 +77,10 @@ export const router = createBrowserRouter(
                 {
                     path: "update-session/:id",
                     element: <UpdateStudySession></UpdateStudySession>
+                },
+                {
+                    path: "materials-list",
+                    element: <AdminMaterialsList></AdminMaterialsList>
                 },
             ]
         },

@@ -2,12 +2,13 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
 import { AuthContext } from "../../../context/AuthContextProvider";
 
 export default function UpdateStudySession() {
     const { id: sessionId } = useParams();
+    const navigate = useNavigate();
     const { register, handleSubmit, reset, setValue } = useForm();
     const axiosSecure = useAxiosSecureApi();
     const [loading, setLoading] = useState(false);
@@ -18,38 +19,47 @@ export default function UpdateStudySession() {
         axiosSecure.get(`/study-sessions/${sessionId}`)
             .then(res => {
                 const session = res.data;
-                for (let key in session) {
-                    if (key in session) {
-                        setValue(key, session[key]);
-                    }
-                }
+
+                // Format date fields as yyyy-mm-dd
+                const formattedSession = {
+                    title: session.title || "",
+                    description: session.description || "",
+                    registrationStart: session.registrationStart?.substring(0, 10),
+                    registrationEnd: session.registrationEnd?.substring(0, 10),
+                    classStart: session.classStart?.substring(0, 10),
+                    classEnd: session.classEnd?.substring(0, 10),
+                    duration: session.duration || "",
+                    status: session.status || "pending"
+                };
+
+                reset(formattedSession); // 👈 reset entire form
             })
             .catch(err => {
                 console.error("Failed to load session", err);
                 toast.error("Failed to load session data");
             });
-    }, [sessionId, axiosSecure, setValue]);
+    }, [sessionId, axiosSecure, reset]);
 
     // 🛠 Submit update request
     const onSubmit = async (data) => {
         const updatedSession = {
             action: "update",
-            ...data,
+            title: data.title,
+            description: data.description,
             registrationStart: new Date(data.registrationStart),
             registrationEnd: new Date(data.registrationEnd),
             classStart: new Date(data.classStart),
             classEnd: new Date(data.classEnd),
+            duration: data.duration,
+            status: data.status
         };
-
-
-        console.log("--------------", updatedSession);
-        
 
         try {
             setLoading(true);
             const res = await axiosSecure.patch(`/study-sessions/${sessionId}`, updatedSession);
             console.log("Update response:", res.data);
             toast.success("Study session updated successfully");
+            navigate("/dashboard/admin-view-all-study-sessions");
         } catch (error) {
             console.error("Update error:", error.response?.data || error.message);
             toast.error("Failed to update session");
@@ -57,7 +67,6 @@ export default function UpdateStudySession() {
             setLoading(false);
         }
     };
-
 
     return (
         <motion.div
@@ -96,6 +105,21 @@ export default function UpdateStudySession() {
                         className="textarea textarea-bordered w-full"
                         required
                     />
+                </div>
+                {/* Dates */}
+                <div>
+                    <label className="label">
+                        <span className="label-text">Session Status</span>
+                    </label>
+                    <select
+                        {...register("status")}
+                        className="select select-bordered w-full"
+                        required
+                    >
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
                 </div>
 
                 {/* Dates */}

@@ -40,15 +40,14 @@ export default function DashboardLayout() {
 
                     {/* 🔁 Dynamic Role-Based Links */}
                     {/* Tutor */}
-                    <li><NavLink to="/dashboard/create-session">🎓 Create Session</NavLink></li>
                     <li><NavLink to="/dashboard/create-study-session">🎓 Create Study Session</NavLink></li>
                     <li><NavLink to="/dashboard/my-study-sessions">📂 My Study Sessions</NavLink></li>
-                    <li><NavLink to="/dashboard/upload-materials">📚 Upload Metarials</NavLink></li>
                     {/* Tutor */}
 
                     {/* Admin */}
                     <li><NavLink to="/dashboard/view-all-users">📂 View All Users</NavLink></li>
-                    <li><NavLink to="/dashboard/admin-view-all-study-sessions">📂 Pending Study Session</NavLink></li>
+                    <li><NavLink to="/dashboard/admin-view-all-study-sessions">📂 All Study Session</NavLink></li>
+                    <li><NavLink to="/dashboard/materials-list">📂 Meterials List</NavLink></li>
                     {/* Admin */}
 
                     <div className="divider"></div>

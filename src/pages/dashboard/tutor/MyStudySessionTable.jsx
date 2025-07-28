@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaEye, FaPlusCircle } from "react-icons/fa";
 import { Link } from "react-router";
+import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
+import { toast } from "react-toastify";
 
 function formatDate(dateStr) {
     const d = new Date(dateStr);
@@ -7,35 +10,67 @@ function formatDate(dateStr) {
     return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
-export default function MyStudySessionsTable({ sessions }) {
+export default function MyStudySessionsTable({ sessions: initialSessions }) {
+    const axiosSecure = useAxiosSecureApi();
+    const [sessions, setSessions] = useState(initialSessions || []);
+    const [filterStatus, setFilterStatus] = useState("all");
+
+    const handleResendRequest = async (id) => {
+        try {
+            const res = await axiosSecure.patch(`/study-sessions/request-again/${id}`);
+            if (res.data?.success) {
+                toast.success("Request sent to admin again.");
+                const updatedSessions = sessions.map((session) =>
+                    session._id === id ? { ...session, status: "pending" } : session
+                );
+                setSessions(updatedSessions);
+            } else {
+                toast.error("Failed to resend request.");
+            }
+        } catch (err) {
+            toast.error("Something went wrong.");
+        }
+    };
+
+    const filteredSessions =
+        filterStatus === "all"
+            ? sessions
+            : sessions.filter((session) => session.status === filterStatus);
+
     return (
-        <div className="overflow-x-auto p-4 max-w-full">
-            <table className="table table-zebra w-full border border-gray-300">
-                <thead className="bg-secondary text-primary">
-                    <tr>
-                        <th>Title</th>
-                        <th>Reg Start</th>
-                        <th>Reg End</th>
-                        <th>Class Start</th>
-                        <th>Class End</th>
-                        <th>Duration</th>
-                        <th>Status</th>
-                        <th>Reg Fee</th>
-                        <th>Created At</th>
-                        <th>Material</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sessions && sessions.length > 0 ? (
-                        sessions.map((session) => (
-                            <tr key={session._id}>
-                                <td>{session.title}</td>
-                                <td>{formatDate(session.registrationStart)}</td>
-                                <td>{formatDate(session.registrationEnd)}</td>
-                                <td>{formatDate(session.classStart)}</td>
-                                <td>{formatDate(session.classEnd)}</td>
-                                <td>{session.duration}</td>
-                                <td>
+        <div className="p-4 space-y-6">
+            {/* Filter Dropdown */}
+            <div className="flex items-center gap-4 mb-4">
+                <label className="text-sm font-medium text-gray-600">Filter by Status:</label>
+                <select
+                    className="select select-bordered w-fit"
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                >
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredSessions.length > 0 ? (
+                    filteredSessions.map((session) => (
+                        <div
+                            key={session._id}
+                            className="bg-base-100 shadow-md rounded-xl p-5 border border-gray-200 space-y-3"
+                        >
+                            <h3 className="text-xl font-semibold text-primary">{session.title}</h3>
+
+                            <div className="text-sm text-gray-700 space-y-1">
+                                <p><strong>Reg Start:</strong> {formatDate(session.registrationStart)}</p>
+                                <p><strong>Reg End:</strong> {formatDate(session.registrationEnd)}</p>
+                                <p><strong>Class Start:</strong> {formatDate(session.classStart)}</p>
+                                <p><strong>Class End:</strong> {formatDate(session.classEnd)}</p>
+                                <p><strong>Duration:</strong> {session.duration}</p>
+                                <p>
+                                    <strong>Status:</strong>{" "}
                                     <span
                                         className={`badge ${session.status === "pending"
                                             ? "badge-warning"
@@ -48,24 +83,51 @@ export default function MyStudySessionsTable({ sessions }) {
                                     >
                                         {session.status}
                                     </span>
-                                </td>
-                                <td>{session.registrationFee}</td>
-                                <td>{formatDate(session.createdAt)}</td>
-                                <td>
-                                    <Link to={`/dashboard/upload-materials/${session._id}`}>Add Material</Link>
-                                    <Link to={`/dashboard/view-materials-by-session/${session._id}`}>view Material</Link>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="12" className="text-center py-4 text-gray-500">
-                                No study sessions found.
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                                </p>
+                                <p><strong>Reg Fee:</strong> {session.registrationFee}</p>
+                                <p><strong>Created:</strong> {formatDate(session.createdAt)}</p>
+                            </div>
+
+                            {session.status === "approved" && (
+                                <div className="flex justify-start gap-4 mt-4">
+                                    <strong>Material:</strong>
+                                    <Link
+                                        to={`/dashboard/upload-materials/${session._id}`}
+                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                                        title="Upload Materials"
+                                    >
+                                        <FaPlusCircle size={20} />
+                                        <span className="text-sm hidden sm:inline">Add</span>
+                                    </Link>
+                                    <Link
+                                        to={`/dashboard/view-materials-by-session/${session._id}`}
+                                        className="text-green-600 hover:text-green-800 flex items-center gap-1"
+                                        title="View Materials"
+                                    >
+                                        <FaEye size={20} />
+                                        <span className="text-sm hidden sm:inline">View</span>
+                                    </Link>
+                                </div>
+                            )}
+
+                            {session.status === "rejected" && (
+                                <button
+                                    onClick={() => handleResendRequest(session._id)}
+                                    className="btn btn-outline btn-warning mt-4"
+                                >
+                                    Request Again
+                                </button>
+                            )}
+
+                            {session.status === "pending" && (
+                                <p className="italic text-gray-400 mt-4">Pending/Rejected</p>
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-center text-gray-500 col-span-full">No study sessions found.</p>
+                )}
+            </div>
         </div>
     );
 }
