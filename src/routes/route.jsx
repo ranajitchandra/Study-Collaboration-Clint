@@ -14,6 +14,8 @@ import ViewAllUsers from "../pages/dashboard/admin/ViewAllUsers";
 import PendingAllStudySessions from "../pages/dashboard/admin/AllStudySession";
 import UpdateStudySession from "../pages/dashboard/admin/UpdateStudySession";
 import AdminMaterialsList from "../pages/dashboard/admin/ViewAllMaterials";
+import AvailableStudySessions from "../pages/sessions/AvailableStudySessions";
+import StudySessionDetails from "../pages/sessions/StudySessionDetails";
 export const router = createBrowserRouter(
     [
         {
@@ -23,6 +25,15 @@ export const router = createBrowserRouter(
                 {
                     path: "/",
                     element: <h1>dd</h1>
+                },
+                // student and all
+                {
+                    path: "/study-sessions",
+                    element: <AvailableStudySessions></AvailableStudySessions>
+                },
+                {
+                    path: "/sessions-details/:id",
+                    element: <StudySessionDetails></StudySessionDetails>
                 },
             ]
         },
@@ -82,6 +93,7 @@ export const router = createBrowserRouter(
                     path: "materials-list",
                     element: <AdminMaterialsList></AdminMaterialsList>
                 },
+                
             ]
         },
     ]

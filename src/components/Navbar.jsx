@@ -53,7 +53,7 @@ export default function Navbar() {
                     <ul className="menu menu-horizontal gap-4 px-1">
                         <li><NavLink to="/" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Home</NavLink></li>
                         <li><NavLink to="#" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Tutors</NavLink></li>
-                        <li><NavLink to="#" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Study Sessions</NavLink></li>
+                        <li><NavLink to="/study-sessions" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Study Sessions</NavLink></li>
 
                     </ul>
                 </div>

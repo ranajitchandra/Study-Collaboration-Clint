@@ -9,30 +9,28 @@ import { AuthContext } from "../../../context/AuthContextProvider";
 export default function UpdateStudySession() {
     const { id: sessionId } = useParams();
     const navigate = useNavigate();
-    const { register, handleSubmit, reset, setValue } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const axiosSecure = useAxiosSecureApi();
     const [loading, setLoading] = useState(false);
-    const { user } = useContext(AuthContext); // optional if tutorEmail/tutoreName needed
+    const { user } = useContext(AuthContext); // if needed
 
-    // 🔁 Pre-fill form with existing session
+    // ✅ Pre-fill form with existing session data
     useEffect(() => {
         axiosSecure.get(`/study-sessions/${sessionId}`)
             .then(res => {
                 const session = res.data;
 
-                // Format date fields as yyyy-mm-dd
-                const formattedSession = {
+                reset({
                     title: session.title || "",
                     description: session.description || "",
-                    registrationStart: session.registrationStart?.substring(0, 10),
-                    registrationEnd: session.registrationEnd?.substring(0, 10),
-                    classStart: session.classStart?.substring(0, 10),
-                    classEnd: session.classEnd?.substring(0, 10),
+                    registrationStart: session.registrationStart?.slice(0, 10),
+                    registrationEnd: session.registrationEnd?.slice(0, 10),
+                    classStart: session.classStart?.slice(0, 10),
+                    classEnd: session.classEnd?.slice(0, 10),
                     duration: session.duration || "",
-                    status: session.status || "pending"
-                };
-
-                reset(formattedSession); // 👈 reset entire form
+                    status: session.status || "pending",
+                    registrationFee: session.registrationFee || 0,
+                });
             })
             .catch(err => {
                 console.error("Failed to load session", err);
@@ -40,7 +38,7 @@ export default function UpdateStudySession() {
             });
     }, [sessionId, axiosSecure, reset]);
 
-    // 🛠 Submit update request
+    // ✅ Submit handler
     const onSubmit = async (data) => {
         const updatedSession = {
             action: "update",
@@ -51,8 +49,10 @@ export default function UpdateStudySession() {
             classStart: new Date(data.classStart),
             classEnd: new Date(data.classEnd),
             duration: data.duration,
-            status: data.status
+            status: data.status,
+            registrationFee: parseFloat(data.registrationFee),
         };
+        console.log(updatedSession);
 
         try {
             setLoading(true);
@@ -70,7 +70,7 @@ export default function UpdateStudySession() {
 
     return (
         <motion.div
-            className="max-w-3xl mx-auto p-8 bg-base-100 shadow-lg rounded-xl"
+            className="max-w-3xl mx-auto p-8 bg-base-100 shadow-xl rounded-xl"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -80,11 +80,10 @@ export default function UpdateStudySession() {
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+
                 {/* Title */}
                 <div>
-                    <label className="label">
-                        <span className="label-text">Session Title</span>
-                    </label>
+                    <label className="label"><span className="label-text">Session Title</span></label>
                     <input
                         {...register("title")}
                         type="text"
@@ -96,9 +95,7 @@ export default function UpdateStudySession() {
 
                 {/* Description */}
                 <div>
-                    <label className="label">
-                        <span className="label-text">Session Description</span>
-                    </label>
+                    <label className="label"><span className="label-text">Session Description</span></label>
                     <textarea
                         {...register("description")}
                         placeholder="Session Description"
@@ -106,11 +103,26 @@ export default function UpdateStudySession() {
                         required
                     />
                 </div>
-                {/* Dates */}
+
+                {/* Registration Fee */}
                 <div>
                     <label className="label">
-                        <span className="label-text">Session Status</span>
+                        <span className="label-text">Registration Fee (TK)</span>
                     </label>
+                    <input
+                        {...register("registrationFee")}
+                        type="number"
+                        step="0.01"
+                        placeholder="Enter fee amount"
+                        className="input input-bordered w-full"
+                        required
+                    />
+                </div>
+
+
+                {/* Status */}
+                <div>
+                    <label className="label"><span className="label-text">Session Status</span></label>
                     <select
                         {...register("status")}
                         className="select select-bordered w-full"
@@ -128,7 +140,7 @@ export default function UpdateStudySession() {
                         <div key={i}>
                             <label className="label">
                                 <span className="label-text">
-                                    {field.replace(/([A-Z])/g, " $1").replace(/^./, (s) => s.toUpperCase())}
+                                    {field.replace(/([A-Z])/g, " $1").replace(/^./, s => s.toUpperCase())}
                                 </span>
                             </label>
                             <input
@@ -143,9 +155,7 @@ export default function UpdateStudySession() {
 
                 {/* Duration */}
                 <div>
-                    <label className="label">
-                        <span className="label-text">Session Duration</span>
-                    </label>
+                    <label className="label"><span className="label-text">Session Duration</span></label>
                     <input
                         {...register("duration")}
                         type="text"
