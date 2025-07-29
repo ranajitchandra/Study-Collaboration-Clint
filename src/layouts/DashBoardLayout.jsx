@@ -50,6 +50,10 @@ export default function DashboardLayout() {
                     <li><NavLink to="/dashboard/materials-list">📂 Meterials List</NavLink></li>
                     {/* Admin */}
 
+                    {/* student */}
+                    <li><NavLink to="/dashboard/booked-sessions">📂 Booked Sessions</NavLink></li>
+                    {/* student */}
+
                     <div className="divider"></div>
 
                     <li><Link to="/">🏠 Back to Home</Link></li>

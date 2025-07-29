@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
@@ -12,7 +12,8 @@ export default function StudySessionDetails() {
     const [session, setSession] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { user } = useContext(AuthContext); // if needed
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,19 +53,33 @@ export default function StudySessionDetails() {
 
     const handleBooking = async () => {
 
-        console.log(session.registrationFee > 0 );
-        
-        
         if (session.registrationFee > 0) {
             // redirect to payment page with session info
+            // Paid session: Check if already booked
+            const res = await axiosSecure.get("/booked-sessions", {
+                params: {
+                    sessionId: session._id,
+                    studentEmail: user.email,
+                },
+            });
+
+            if (res.data) {
+                Swal.fire({
+                    icon: "info",
+                    title: "Already Booked",
+                    text: "You have already booked this paid session.",
+                });
+                return;
+            }
+
+            // Not booked yet — go to payment
             navigate(`/payment/${session._id}`);
+
         } else {
             try {
                 const bookingData = {
                     sessionId: session._id,
-                    tutorEmail: session.tutorEmail,
                     studentEmail: user.email,
-                    title: session.title,
                 };
                 const res = await axiosSecure.post("/booked-sessions", bookingData);
                 if (res.data.insertedId) {

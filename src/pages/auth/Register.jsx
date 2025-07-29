@@ -9,7 +9,7 @@ import useAxiosApi from "../../hooks/useAxiosApi";
 
 export default function Register() {
     const { createUser, updateProfileUser, loginWithGoogle } = useContext(AuthContext);
-    const axiosInstance  = useAxiosApi();
+    const axiosInstance = useAxiosApi();
     const navigate = useNavigate();
 
     const [name, setName] = useState("");
@@ -98,19 +98,21 @@ export default function Register() {
 
         if (Object.keys(newErrors).length === 0) {
             createUser(email, password)
-                .then(async(result) => {
+                .then(async (result) => {
 
                     // update userinfo in the database
                     const userInfo = {
+                        name,             // from input
+                        photoURL: photo,  // from input
                         email,
-                        role: 'student', // default role
+                        role: 'student',
                         created_at: new Date().toISOString(),
                         last_log_in: new Date().toISOString()
-                    }
+                    };
 
                     const userRes = await axiosInstance.post('/users', userInfo);
                     console.log(userRes.data);
-                    
+
 
                     updateProfileUser(userData)
                         .then(() => {

@@ -16,6 +16,18 @@ import UpdateStudySession from "../pages/dashboard/admin/UpdateStudySession";
 import AdminMaterialsList from "../pages/dashboard/admin/ViewAllMaterials";
 import AvailableStudySessions from "../pages/sessions/AvailableStudySessions";
 import StudySessionDetails from "../pages/sessions/StudySessionDetails";
+import Payment from "../pages/Payment/Payment";
+import TutorsList from "../tutor/TutorList";
+import MyBookedSessions from "../pages/dashboard/student/BookedSession";
+import BookedSessionDetails from "../pages/dashboard/student/BookSessionDetails";
+
+
+
+
+
+
+
+
 export const router = createBrowserRouter(
     [
         {
@@ -35,6 +47,14 @@ export const router = createBrowserRouter(
                     path: "/sessions-details/:id",
                     element: <StudySessionDetails></StudySessionDetails>
                 },
+                {
+                    path: "/payment/:sessionId",
+                    element: <Payment></Payment>
+                },
+                {
+                    path: "/tutors",
+                    element: <TutorsList></TutorsList>
+                }
             ]
         },
         {
@@ -93,7 +113,15 @@ export const router = createBrowserRouter(
                     path: "materials-list",
                     element: <AdminMaterialsList></AdminMaterialsList>
                 },
-                
+                // student
+                {
+                    path: "booked-sessions",
+                    element: <MyBookedSessions></MyBookedSessions>
+                },
+                {
+                    path: "booked-session-details/:bookedSessionId",
+                    element: <BookedSessionDetails></BookedSessionDetails>
+                }
             ]
         },
     ]

@@ -52,7 +52,7 @@ export default function Navbar() {
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal gap-4 px-1">
                         <li><NavLink to="/" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Home</NavLink></li>
-                        <li><NavLink to="#" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Tutors</NavLink></li>
+                        <li><NavLink to="/tutors" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Tutors</NavLink></li>
                         <li><NavLink to="/study-sessions" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Study Sessions</NavLink></li>
 
                     </ul>

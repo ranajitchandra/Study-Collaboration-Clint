@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import Swal from 'sweetalert2';
-import useTrackingLogger from '../../../hooks/useTrackingLogger';
 import { AuthContext } from '../../context/AuthContextProvider';
 import useAxiosSecureApi from '../../hooks/useAxiosSecureApi';
 
@@ -13,11 +12,8 @@ const PaymentForm = () => {
     const { sessionId } = useParams();
     const { user } = useContext(AuthContext);
     const axiosSecure = useAxiosSecureApi();
-    const { logTracking } = useTrackingLogger();
     const navigate = useNavigate();
-
     const [error, setError] = useState('');
-
 
     const { isPending, data: sessionInfo = {} } = useQuery({
         queryKey: ['sessions', sessionId],
@@ -25,127 +21,110 @@ const PaymentForm = () => {
             const res = await axiosSecure.get(`/study-sessions/${sessionId}`);
             return res.data;
         }
-    })
+    });
 
     if (isPending) {
-        return '...loading'
+        return <p className="text-center">Loading session info...</p>;
     }
 
-    const amount = sessionInfo.cost;
+    const amount = sessionInfo.registrationFee || 0;
     const amountInCents = amount * 100;
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!stripe || !elements) {
-            return;
-        }
+        if (!stripe || !elements) return;
 
         const card = elements.getElement(CardElement);
+        if (!card) return;
 
-        if (!card) {
-            return;
-        }
-
-        // step- 1: validate the card
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
+        const { error: paymentError, paymentMethod } = await stripe.createPaymentMethod({
             type: 'card',
             card
-        })
+        });
 
-        if (error) {
-            setError(error.message);
-        }
-        else {
+        if (paymentError) {
+            setError(paymentError.message);
+            return;
+        } else {
             setError('');
-            console.log('payment method', paymentMethod);
+        }
 
-            // step-2: create payment intent
-            const res = await axiosSecure.post('/create-payment-intent', {
-                amountInCents,
-                parcelId: sessionId
-            })
+        const res = await axiosSecure.post('/create-payment-intent', {
+            amountInCents,
+            sessionId
+        });
 
-            const clientSecret = res.data.clientSecret;
+        const clientSecret = res.data.clientSecret;
 
-            // step-3: confirm payment
-            const result = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: elements.getElement(CardElement),
-                    billing_details: {
-                        name: user.displayName,
-                        email: user.email
-                    },
+        const result = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card,
+                billing_details: {
+                    name: user.displayName || 'Anonymous',
+                    email: user.email,
                 },
-            });
+            },
+        });
 
-            if (result.error) {
-                setError(result.error.message);
-            } else {
-                setError('');
-                if (result.paymentIntent.status === 'succeeded') {
-                    console.log('Payment succeeded!');
-                    const transactionId = result.paymentIntent.id;
-                    // step-4 mark parcel paid also create payment history
-                    const paymentData = {
-                        parcelId: sessionId,
-                        email: user.email,
-                        amount,
-                        transactionId: transactionId,
-                        paymentMethod: result.paymentIntent.payment_method_types
-                    }
+        if (result.error) {
+            setError(result.error.message);
+        } else {
+            if (result.paymentIntent.status === 'succeeded') {
+                const transactionId = result.paymentIntent.id;
 
-                    const paymentRes = await axiosSecure.post('/payments', paymentData);
-                    if (paymentRes.data.insertedId) {
+                const bookingData = {
+                    sessionId,
+                    studentEmail: user.email,
+                    transactionId,
+                    paymentStatus: 'paid',
+                    bookedAt: new Date(),
+                };
 
-                        // ✅ Show SweetAlert with transaction ID
-                        await Swal.fire({
-                            icon: 'success',
-                            title: 'Payment Successful!',
-                            html: `<strong>Transaction ID:</strong> <code>${transactionId}</code>`,
-                            confirmButtonText: 'Go to My Parcels',
-                        });
+                const bookingRes = await axiosSecure.post('/booked-sessions', bookingData);
 
-
-                        await logTracking(
-                            {
-                                tracking_id: sessionInfo.tracking_id,
-                                status: "payment_done",
-                                details: `Paid by ${user.displayName}`,
-                                updated_by: user.email,
-                            }
-                        )
-                    // ✅ Redirect to /myParcels
-                    navigate('/dashboard/myParcels');
-
+                if (bookingRes.data.insertedId) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Payment Successful!',
+                        html: `<strong>Transaction ID:</strong> <code>${transactionId}</code>`,
+                        confirmButtonText: 'Go to My Sessions',
+                    });
+                    navigate('/study-sessions');
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Already Booked',
+                        text: 'You have already booked this session.',
+                    });
                 }
             }
         }
-    }
+    };
 
-
-
-
-
-}
-
-return (
-    <div>
-        <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-auto">
-            <CardElement className="p-2 border rounded">
-            </CardElement>
-            <button
-                type='submit'
-                className="btn btn-primary text-black w-full"
-                disabled={!stripe}
+    return (
+        <div>
+            <form
+                onSubmit={handleSubmit}
+                className="space-y-4 bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-auto"
             >
-                Pay ${amount}
-            </button>
-            {
-                error && <p className='text-red-500'>{error}</p>
-            }
-        </form>
-    </div>
-);
+                <h2 className="text-xl font-semibold text-center mb-4">
+                    Pay ${amount} for {sessionInfo.title}
+                </h2>
+
+                <CardElement className="p-2 border rounded" />
+
+                <button
+                    type="submit"
+                    className="btn btn-primary text-black w-full"
+                    disabled={!stripe}
+                >
+                    Pay ${amount}
+                </button>
+
+                {error && <p className="text-red-500 mt-2">{error}</p>}
+            </form>
+        </div>
+    );
 };
 
 export default PaymentForm;
