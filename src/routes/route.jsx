@@ -20,6 +20,15 @@ import Payment from "../pages/Payment/Payment";
 import TutorsList from "../tutor/TutorList";
 import MyBookedSessions from "../pages/dashboard/student/BookedSession";
 import BookedSessionDetails from "../pages/dashboard/student/BookSessionDetails";
+import CreateNote from "../pages/dashboard/student/CreateNote";
+import MyNotes from "../pages/dashboard/student/Mynotes";
+import StudyMaterials from "../pages/dashboard/student/StudyMaterials";
+import ErrorPage from "../components/ErrorPage";
+import Forbidden from "../components/Forbidden";
+import AdminRoute from "../pages/roleAccess/AdminRoute";
+import TutorRoute from "../pages/roleAccess/TutorRoute";
+import PrivateRoute from "./PrivateRoute";
+import HomeLayout from "../layouts/HomeLayout";
 
 
 
@@ -36,7 +45,7 @@ export const router = createBrowserRouter(
             children: [
                 {
                     path: "/",
-                    element: <h1>dd</h1>
+                    element: <HomeLayout></HomeLayout>
                 },
                 // student and all
                 {
@@ -73,7 +82,7 @@ export const router = createBrowserRouter(
         },
         {
             path: "/dashboard",
-            element: <DashboardLayout></DashboardLayout> ,
+            element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute> ,
             children: [
                 {
                     index: true,
@@ -82,11 +91,11 @@ export const router = createBrowserRouter(
                 // Tutor
                 {
                     path: "create-study-session",
-                    element: <CreateStudySession></CreateStudySession>
+                    element: <TutorRoute> <CreateStudySession></CreateStudySession> </TutorRoute>
                 },
                 {
                     path: "my-study-sessions",
-                    element: <MyStudySessions></MyStudySessions>
+                    element: <TutorRoute> <MyStudySessions></MyStudySessions></TutorRoute>
                 },
                 {
                     path: "upload-materials/:id",
@@ -99,19 +108,19 @@ export const router = createBrowserRouter(
                 // Admin
                 {
                     path: "view-all-users",
-                    element: <ViewAllUsers></ViewAllUsers>
+                    element:  <AdminRoute> <ViewAllUsers></ViewAllUsers> </AdminRoute>
                 },
                 {
                     path: "admin-view-all-study-sessions",
-                    element: <PendingAllStudySessions></PendingAllStudySessions>
+                    element: <AdminRoute> <PendingAllStudySessions></PendingAllStudySessions> </AdminRoute>
                 },
                 {
                     path: "update-session/:id",
-                    element: <UpdateStudySession></UpdateStudySession>
+                    element: <UpdateStudySession></UpdateStudySession> 
                 },
                 {
                     path: "materials-list",
-                    element: <AdminMaterialsList></AdminMaterialsList>
+                    element: <AdminRoute><AdminMaterialsList></AdminMaterialsList> </AdminRoute>
                 },
                 // student
                 {
@@ -121,9 +130,29 @@ export const router = createBrowserRouter(
                 {
                     path: "booked-session-details/:bookedSessionId",
                     element: <BookedSessionDetails></BookedSessionDetails>
+                },
+                {
+                    path: "create-note",
+                    element: <CreateNote></CreateNote>
+                },
+                {
+                    path: "notes",
+                    element: <MyNotes></MyNotes>
+                },
+                {
+                    path: "study-materials",
+                    element: <StudyMaterials></StudyMaterials>
                 }
             ]
         },
+        {
+            path: "forbidden",
+            element: <Forbidden></Forbidden>
+        },
+        {
+            path: "*",
+            element: <ErrorPage></ErrorPage>
+        }
     ]
 )
 

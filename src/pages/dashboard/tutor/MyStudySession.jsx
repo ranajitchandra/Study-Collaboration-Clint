@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../../context/AuthContextProvider";
 import MyStudySessionsTable from "./MyStudySessionTable";
+import Loading from "../../../components/Loading";
 
 export default function MyStudySessions() {
     const { user } = useContext(AuthContext);
@@ -25,7 +26,7 @@ export default function MyStudySessions() {
             .finally(() => setLoading(false));
     }, [user?.email]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div><Loading></Loading></div>;
 
     return (
         <div>

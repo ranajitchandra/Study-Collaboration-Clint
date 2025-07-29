@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import useAxiosSecureApi from '../hooks/useAxiosSecureApi';
+import Loading from '../components/Loading';
 
 export default function TutorsList() {
     const axiosSecure = useAxiosSecureApi();
@@ -16,7 +17,7 @@ export default function TutorsList() {
             .catch(() => setLoading(false));
     }, [axiosSecure]);
 
-    if (loading) return <p className="text-center">Loading...</p>;
+    if (loading) return <p className="text-center"><Loading></Loading></p>;
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">

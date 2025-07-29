@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import useAxiosSecureApi from "../../hooks/useAxiosSecureApi";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContextProvider";
+import Loading from "../../components/Loading";
 
 export default function StudySessionDetails() {
     const { id } = useParams();
@@ -14,6 +15,9 @@ export default function StudySessionDetails() {
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    console.log(session);
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,7 +49,7 @@ export default function StudySessionDetails() {
         return new Date() > new Date(session.registrationEnd);
     };
 
-    if (loading) return <div className="text-center py-10">Loading...</div>;
+    if (loading) return <div className="text-center py-10"><Loading></Loading></div>;
     if (!session) return <div className="text-center py-10">Session not found</div>;
 
 
@@ -79,6 +83,8 @@ export default function StudySessionDetails() {
             try {
                 const bookingData = {
                     sessionId: session._id,
+                    sessionTitle: session.title,
+                    tutorEmail: session.tutorEmail,
                     studentEmail: user.email,
                 };
                 const res = await axiosSecure.post("/booked-sessions", bookingData);

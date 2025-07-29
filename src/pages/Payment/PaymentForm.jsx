@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../context/AuthContextProvider';
 import useAxiosSecureApi from '../../hooks/useAxiosSecureApi';
+import Loading from '../../components/Loading';
 
 const PaymentForm = () => {
     const stripe = useStripe();
@@ -24,7 +25,7 @@ const PaymentForm = () => {
     });
 
     if (isPending) {
-        return <p className="text-center">Loading session info...</p>;
+        return <p className="text-center"><Loading></Loading></p>;
     }
 
     const amount = sessionInfo.registrationFee || 0;
@@ -75,6 +76,8 @@ const PaymentForm = () => {
                 const bookingData = {
                     sessionId,
                     studentEmail: user.email,
+                    sessionTitle: sessionInfo.title,
+                    tutorEmail: sessionInfo.tutorEmail,
                     transactionId,
                     paymentStatus: 'paid',
                     bookedAt: new Date(),

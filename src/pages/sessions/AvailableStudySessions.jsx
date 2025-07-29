@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 import useAxiosSecureApi from "../../hooks/useAxiosSecureApi";
+import Loading from "../../components/Loading";
 
 export default function AvailableStudySessions() {
     const axiosSecure = useAxiosSecureApi();
@@ -35,7 +36,7 @@ export default function AvailableStudySessions() {
             <h2 className="text-3xl font-bold mb-8 text-center text-primary">Available Study Sessions</h2>
 
             {loading ? (
-                <p className="text-center text-gray-500 text-lg">Loading sessions...</p>
+                <p className="text-center text-gray-500 text-lg"><Loading></Loading></p>
             ) : sessions.length === 0 ? (
                 <p className="text-center text-gray-500 text-lg">No study sessions available.</p>
             ) : (

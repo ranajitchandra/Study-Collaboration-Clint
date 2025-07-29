@@ -22,7 +22,7 @@ export default function DashBoardHome () {
 
     return (
         <>
-            <h1>D Home</h1>
+            <h1 className="text-6xl mx-auto">WellCome to Dashboard</h1>
         </>
     )
 

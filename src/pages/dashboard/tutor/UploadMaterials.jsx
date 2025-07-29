@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../context/AuthContextProvider";
 import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
@@ -11,6 +11,7 @@ export default function UploadMaterials() {
     const axiosSecure = useAxiosSecureApi();
     const { register, handleSubmit, reset } = useForm();
     const [uploading, setUploading] = useState(false);
+    const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         try {
@@ -44,6 +45,7 @@ export default function UploadMaterials() {
             if (response.data.insertedId) {
                 toast.success("Material uploaded successfully");
                 reset();
+                navigate("/dashboard/my-study-sessions")
             } else {
                 toast.error("Failed to upload material");
             }

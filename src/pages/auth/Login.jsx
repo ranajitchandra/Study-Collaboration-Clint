@@ -7,9 +7,11 @@ import loginAni from "..//../assets/loginlottie.json"
 import { AuthContext } from "../../context/AuthContextProvider";
 
 import mainLogo from "../../assets/logo.png"
+import useAxiosApi from "../../hooks/useAxiosApi";
 
 export default function Login() {
     const { loginUser, loginWithGoogle, resetPassword } = useContext(AuthContext);
+    const axiosInstance = useAxiosApi();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -72,8 +74,23 @@ export default function Login() {
 
     const handleGoogleLogin = () => {
         loginWithGoogle()
-            .then((result) => {
+            .then(async (result) => {
                 toast.success(`Login Successful, ${result.user.displayName}`);
+                const user = result.user;
+                console.log(result.user);
+                // update userinfo in the database
+                const userInfo = {
+                    name: user.displayName,             // from input
+                    photoURL: user.photoURL,  // from input
+                    email: user.email,
+                    role: 'student',
+                    created_at: new Date().toISOString(),
+                    last_log_in: new Date().toISOString()
+                };
+
+                const res = await axiosInstance.post('/users', userInfo);
+                console.log('user update info', res.data)
+
                 navigate(location.state || "/");
             })
             .catch(() => toast.error("Google Login Failed"));
@@ -105,7 +122,7 @@ export default function Login() {
                     >
                         <div className="grid grid-cols-3">
                             <Link to="/">
-                            <img width="32" className="ml-4" src={mainLogo} alt="" />
+                                <img width="32" className="ml-4" src={mainLogo} alt="" />
                             </Link>
                             <h2 className="text-2xl font-bold mb-6 text-center text-primary">Login</h2>
                         </div>

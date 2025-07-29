@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
+import Loading from "../../../components/Loading";
 
 export default function ViewAllUsers() {
     const axiosSecure = useAxiosSecureApi();
@@ -60,7 +61,7 @@ export default function ViewAllUsers() {
             </form>
 
             {loading ? (
-                <p>Loading...</p>
+                <Loading></Loading>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="table w-full">

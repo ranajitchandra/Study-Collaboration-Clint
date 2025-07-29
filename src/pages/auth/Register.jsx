@@ -129,8 +129,23 @@ export default function Register() {
 
     const handleGoogleLogin = () => {
         loginWithGoogle()
-            .then((result) => {
+            .then(async(result) => {
                 toast.success(`Login Successful, ${result.user.displayName}`);
+                const user = result.user;
+                console.log(result.user);
+                // update userinfo in the database
+                const userInfo = {
+                    name: user.displayName,             // from input
+                    photoURL: user.photoURL,  // from input
+                    email: user.email,
+                    role: 'student',
+                    created_at: new Date().toISOString(),
+                    last_log_in: new Date().toISOString()
+                };
+
+                const res = await axiosInstance.post('/users', userInfo);
+                console.log('user update info', res.data)
+
                 navigate(location.state || "/");
             })
             .catch(() => toast.error("Google Login Failed"));

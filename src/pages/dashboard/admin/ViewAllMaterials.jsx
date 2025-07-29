@@ -3,6 +3,7 @@ import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+import Loading from "../../../components/Loading";
 
 export default function MaterialsWithSessionList() {
     const axiosSecure = useAxiosSecureApi();
@@ -45,7 +46,7 @@ export default function MaterialsWithSessionList() {
         });
     };
 
-    if (loading) return <p className="text-center mt-10">Loading materials...</p>;
+    if (loading) return <p className="text-center mt-10"><Loading></Loading></p>;
 
     return (
         <motion.div

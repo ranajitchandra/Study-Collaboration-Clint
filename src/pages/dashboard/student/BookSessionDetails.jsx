@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../../../context/AuthContextProvider';
 import useAxiosSecureApi from '../../../hooks/useAxiosSecureApi';
+import Loading from '../../../components/Loading';
 
 export default function BookedSessionDetails() {
     const { bookedSessionId } = useParams();
@@ -21,7 +22,10 @@ export default function BookedSessionDetails() {
         }
     });
 
-    const { data: reviews = [] } = useQuery({
+    const {
+        data: reviews = [],
+        refetch: refetchReviews
+    } = useQuery({
         queryKey: ['sessionReviews', bookedSessionId],
         queryFn: async () => {
             const res = await axiosSecure.get(`/reviews?sessionId=${bookedSessionId}`);
@@ -46,10 +50,11 @@ export default function BookedSessionDetails() {
             Swal.fire('Success', 'Review submitted!', 'success');
             setReviewText('');
             setRating(5);
+            refetchReviews(); // 🔁 Update the review list after submission
         }
     };
 
-    if (isLoading) return <p>Loading session details...</p>;
+    if (isLoading) return <p><Loading></Loading></p>;
 
     return (
         <div className="p-6 space-y-6">

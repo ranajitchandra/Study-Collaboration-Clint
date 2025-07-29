@@ -2,18 +2,22 @@ import { Link, NavLink, Outlet } from "react-router";
 import { FiMenu } from "react-icons/fi";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContextProvider";
+import useUserRole from "../hooks/useUserRole";
 
 export default function DashboardLayout() {
     const { user, logOutUser } = useContext(AuthContext);
+    const { role, roleLoading } = useUserRole()
 
     const handleLogout = () => {
-        logOutUser().then(() => {
-            // Optional: toast.success("Logged out");
-        });
+        logOutUser()
+            .then(() => {
+                toast.success(`Logout Successful, `);
+                navigate("/login")
+            })
     };
 
     return (
-        <div className="drawer lg:drawer-open bg-base-100 min-h-screen">
+        <div className="drawer lg:drawer-open bg-base-100 min-h-screen max-w-7xl mx-auto">
             {/* Drawer Toggle Button (Mobile) */}
             <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 
@@ -40,18 +44,39 @@ export default function DashboardLayout() {
 
                     {/* 🔁 Dynamic Role-Based Links */}
                     {/* Tutor */}
-                    <li><NavLink to="/dashboard/create-study-session">🎓 Create Study Session</NavLink></li>
-                    <li><NavLink to="/dashboard/my-study-sessions">📂 My Study Sessions</NavLink></li>
+                    {
+                        !roleLoading && role === 'tutor' && (
+                            <>
+                                <li><NavLink to="/dashboard/create-study-session">🎓 Create Study Session</NavLink></li>
+                                <li><NavLink to="/dashboard/my-study-sessions">📂 My Study Sessions</NavLink></li>
+                            </>
+                        )
+                    }
                     {/* Tutor */}
 
                     {/* Admin */}
-                    <li><NavLink to="/dashboard/view-all-users">📂 View All Users</NavLink></li>
-                    <li><NavLink to="/dashboard/admin-view-all-study-sessions">📂 All Study Session</NavLink></li>
-                    <li><NavLink to="/dashboard/materials-list">📂 Meterials List</NavLink></li>
+                    {
+                        !roleLoading && role === 'admin' && (
+                            <>
+                                <li><NavLink to="/dashboard/view-all-users">📂 View All Users</NavLink></li>
+                                <li><NavLink to="/dashboard/admin-view-all-study-sessions">📂 All Study Session</NavLink></li>
+                                <li><NavLink to="/dashboard/materials-list">📂 Meterials List</NavLink></li>
+                            </>
+                        )
+                    }
                     {/* Admin */}
 
                     {/* student */}
-                    <li><NavLink to="/dashboard/booked-sessions">📂 Booked Sessions</NavLink></li>
+                    {
+                        !roleLoading && role === 'student' && (
+                            <>
+                                <li><NavLink to="/dashboard/booked-sessions">📂 Booked Sessions</NavLink></li>
+                                <li><NavLink to="/dashboard/create-note">📂 Create Note</NavLink></li>
+                                <li><NavLink to="/dashboard/notes">📂 Notes</NavLink></li>
+                                <li><NavLink to="/dashboard/study-materials">📂 Study Materials</NavLink></li>
+                            </>
+                        )
+                    }
                     {/* student */}
 
                     <div className="divider"></div>

@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
+import Loading from "../../../components/Loading";
 
 export default function ViewMaterialsBySession() {
     const { id: sessionId } = useParams();
@@ -14,7 +15,7 @@ export default function ViewMaterialsBySession() {
         },
     });
 
-    if (isLoading) return <p className="text-center text-xl">Loading materials...</p>;
+    if (isLoading) return <p className="text-center text-xl"><Loading></Loading></p>;
     if (error) return <p className="text-center text-red-500">Failed to load materials.</p>;
 
     return (

@@ -3,6 +3,7 @@ import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
 import Swal from "sweetalert2";
 import { useState } from "react";
 import { Link } from "react-router";
+import Loading from "../../../components/Loading";
 
 export default function AdminAllStudySessions() {
     const axiosSecure = useAxiosSecureApi();
@@ -121,7 +122,7 @@ export default function AdminAllStudySessions() {
             ? sessions
             : sessions.filter((s) => s.status === statusFilter);
 
-    if (isLoading) return <p className="text-center">Loading sessions...</p>;
+    if (isLoading) return <p className="text-center"><Loading></Loading></p>;
 
     return (
         <div className="max-w-7xl mx-auto p-6">

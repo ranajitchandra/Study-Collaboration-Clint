@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContextProvider';
 import useAxiosSecureApi from '../../../hooks/useAxiosSecureApi';
 import { motion, AnimatePresence } from 'framer-motion';
+import Loading from '../../../components/Loading';
 
 export default function MyBookedSessions() {
     const { user } = useContext(AuthContext);
@@ -18,7 +19,7 @@ export default function MyBookedSessions() {
         enabled: !!user?.email,
     });
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <Loading></Loading>;
 
     return (
         <AnimatePresence>
