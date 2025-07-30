@@ -37,9 +37,8 @@ export default function Navbar() {
                         </div>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow">
                             <li><NavLink to="/" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Home</NavLink></li>
-                            <li><NavLink to="#" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Tutors</NavLink></li>
-                            <li><NavLink to="#" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Study Sessions</NavLink></li>
-
+                            <li><NavLink to="/tutors" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Tutors</NavLink></li>
+                            <li><NavLink to="/study-sessions" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Study Sessions</NavLink></li>
                         </ul>
                     </div>
                     <div className="flex items-center gap-3">
@@ -54,12 +53,11 @@ export default function Navbar() {
                         <li><NavLink to="/" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Home</NavLink></li>
                         <li><NavLink to="/tutors" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Tutors</NavLink></li>
                         <li><NavLink to="/study-sessions" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Study Sessions</NavLink></li>
-
                     </ul>
                 </div>
 
                 <div className="navbar-end">
-                    <input onClick={() => setTheTheme(!theTheme)} type="checkbox" defaultChecked className="toggle toggle-sm mr-5" />
+                    {/* <input onClick={() => setTheTheme(!theTheme)} type="checkbox" defaultChecked className="toggle toggle-sm mr-5" /> */}
                     {user ?
                         <div className="flex gap-2">
                             <div className="dropdown dropdown-end">
@@ -103,9 +101,9 @@ export default function Navbar() {
                         </div>
 
                         :
-                        <div className="navbar-center hidden lg:flex">
+                        <div className="navbar-center  lg:flex">
                             <ul className="menu menu-horizontal gap-4 px-1">
-                                <li><NavLink to="/login" className="hover:bg-primary py-1 px-5 hover:text-white duration-500 rounded-sm">Signin</NavLink></li>
+                                <li><NavLink to="/login" className="btn btn-primary hover:bg-amber-900 py-1 px-5 hover:text-white duration-500 rounded-sm">Signin</NavLink></li>
                             </ul>
                         </div>
                     }

@@ -6,6 +6,7 @@ import useAxiosSecureApi from "../../hooks/useAxiosSecureApi";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../context/AuthContextProvider";
 import Loading from "../../components/Loading";
+import useUserRole from "../../hooks/useUserRole";
 
 export default function StudySessionDetails() {
     const { id } = useParams();
@@ -14,10 +15,11 @@ export default function StudySessionDetails() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
+    const { role, roleLoading } = useUserRole()
     const navigate = useNavigate();
 
     console.log(session);
-    
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,8 +27,8 @@ export default function StudySessionDetails() {
                 const res = await axiosSecure.get(`/study-sessions/${id}`);
                 setSession(res.data);
 
-                // const reviewRes = await axiosSecure.get(`/reviews?sessionId=${id}`);
-                // setReviews(reviewRes.data || []);
+                const reviewRes = await axiosSecure.get(`/reviews?sessionId=${id}`);
+                setReviews(reviewRes.data || []);
             } catch (error) {
                 console.error("Failed to load session details", error);
             } finally {
@@ -121,21 +123,34 @@ export default function StudySessionDetails() {
                 <p><strong>Class Start:</strong> {format(new Date(session.classStart), "PPP")}</p>
                 <p><strong>Class End:</strong> {format(new Date(session.classEnd), "PPP")}</p>
                 <p><strong>Duration:</strong> {session.duration}</p>
-                <p>
+                <p className="mb-4">
                     <strong>Registration Fee:</strong>{" "}
-                    {session.registrationFee === 0 ? "Free" : `৳${session.registrationFee}`}
+                    {session.registrationFee === 0 ? "Free" : `$${session.registrationFee}`}
                 </p>
             </div>
 
-            <div className="mt-6">
-                <button
-                    onClick={handleBooking}
-                    disabled={isRegistrationClosed()}
-                    className={`btn btn-primary ${isRegistrationClosed() ? "btn-disabled" : ""}`}
-                >
-                    {isRegistrationClosed() ? "Registration Closed" : "Book Now"}
-                </button>
-            </div>
+            <button
+                onClick={handleBooking}
+                disabled={
+                    roleLoading ||
+                    role === "admin" ||
+                    role === "tutor" ||
+                    isRegistrationClosed()
+                }
+                className={`btn btn-primary ${roleLoading || role === "admin" || role === "tutor" || isRegistrationClosed()
+                        ? "btn-disabled"
+                        : ""
+                    }`}
+            >
+                {roleLoading
+                    ? "Checking role..."
+                    : role === "admin" || role === "tutor"
+                        ? "Booking not allowed"
+                        : isRegistrationClosed()
+                            ? "Registration Closed"
+                            : "Book Now"}
+            </button>
+
 
             {/* Reviews */}
             <div className="mt-10">
@@ -150,10 +165,13 @@ export default function StudySessionDetails() {
                                 className="border p-4 rounded bg-gray-50"
                             >
                                 <p className="text-sm text-gray-700">
-                                    <strong>{review.studentName || "Anonymous"}:</strong> {review.comment}
+                                    <strong>{review.studentName || "Anonymous"}:</strong>
                                 </p>
                                 <p className="text-sm text-yellow-600">
                                     Rating: {review.rating} / 5
+                                </p>
+                                <p className="text-sm text-primary  ">
+                                    Rating: {review.reviewText}
                                 </p>
                             </div>
                         ))}

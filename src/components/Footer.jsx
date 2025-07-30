@@ -1,4 +1,5 @@
 import { FaTwitter, FaFacebookF, FaMapMarkerAlt, FaInstagram } from 'react-icons/fa';
+import mainLogo from "../assets/logo.png"
 
 const Footer = () => {
     return (
@@ -9,9 +10,10 @@ const Footer = () => {
                         A garden is a peaceful, vibrant space filled with blooming flowers, where tools like spades and trowels help maintain the land. Butterflies flutter between blossoms, making every garden a beautiful blend of nature, care, and joy.
                     </p>
 
-                    <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
-                        <span className="text-2xl"><img className="hidden lg:block w-8 bg-white p-0.5 rounded"  alt="Logo" /></span> Job Portal
-                    </h2>
+                    <div className="flex items-center gap-3">
+                        <img width="32" className="ml-4" src={mainLogo} alt="" />
+                        <span className="text-xl lg:text-3xl font-bold text-accent-white">Study Collab</span>
+                    </div>
                     <div className="flex space-x-4 mt-4 text-lg">
                         <FaTwitter />
                         <FaFacebookF />

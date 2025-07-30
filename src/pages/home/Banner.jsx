@@ -4,24 +4,24 @@ import { FaBookOpen } from "react-icons/fa";
 export default function BannerSection() {
     return (
         <div
-            className="relative bg-cover bg-center h-[85vh] flex items-center justify-center text-white"
+            className="relative bg-cover bg-center flex items-center justify-center text-white"
             style={{
                 backgroundImage:
-                    "url('https://i.ibb.co/1fMjZMMR/pexels-photo-1326947-jpeg-cs-srgb-dl-pexels-george-dolgikh-551816-1326947.jpg')", // Replace with your desired image URL
+                    "url('https://i.ibb.co/xqLCn0jk/photo-1489710437720-ebb67ec84dd2-q-80-w-1170-auto-format-fit-crop-ixlib-rb-4-1.jpg')", // Replace with your desired image URL
             }}
         >
-            <div className="absolute inset-0 bg-black bg-opacity-50" />
+            <div className="absolute inset-0 bg-black/50" />
 
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
-                className="relative z-10 max-w-3xl text-center px-6"
+                className="relative z-10 max-w-3xl text-center p-10"
             >
                 <div className="flex justify-center mb-4 text-5xl text-emerald-300">
                     <FaBookOpen />
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+                <h1 className="text-4xl md:text-4xl font-bold mb-4 drop-shadow-lg">
                     Empowering Collaborative Learning
                 </h1>
                 <p className="text-lg md:text-xl text-gray-200">

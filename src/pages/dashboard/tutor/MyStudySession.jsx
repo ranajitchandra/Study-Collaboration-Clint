@@ -14,7 +14,7 @@ export default function MyStudySessions() {
 
         setLoading(true);
         axios
-            .get("http://localhost:3000/study-sessions", {
+            .get("https://student-colabroration-server.vercel.app/study-sessions", {
                 params: { email: user.email },
                 withCredentials: true,
             })

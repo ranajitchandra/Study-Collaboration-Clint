@@ -84,6 +84,12 @@ export default function MyStudySessionsTable({ sessions: initialSessions }) {
                                         {session.status}
                                     </span>
                                 </p>
+                                {session.status === "rejected" && (
+                                    <p className="text-sm text-red-600">
+                                        <strong>Reject reason:</strong> {session.rejectionReason || "No reason provided."}
+                                    </p>
+                                )}
+
                                 <p><strong>Reg Fee:</strong> {session.registrationFee}</p>
                                 <p><strong>Created:</strong> {formatDate(session.createdAt)}</p>
                             </div>

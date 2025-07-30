@@ -3,6 +3,7 @@ import { FiMenu } from "react-icons/fi";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContextProvider";
 import useUserRole from "../hooks/useUserRole";
+import { FaBook, FaChalkboardTeacher, FaClipboardList, FaFileAlt, FaHome, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
 
 export default function DashboardLayout() {
     const { user, logOutUser } = useContext(AuthContext);
@@ -43,46 +44,38 @@ export default function DashboardLayout() {
                     <h2 className="text-lg font-semibold mb-4">Hello, {user?.displayName || "User"}</h2>
 
                     {/* 🔁 Dynamic Role-Based Links */}
+
                     {/* Tutor */}
-                    {
-                        !roleLoading && role === 'tutor' && (
-                            <>
-                                <li><NavLink to="/dashboard/create-study-session">🎓 Create Study Session</NavLink></li>
-                                <li><NavLink to="/dashboard/my-study-sessions">📂 My Study Sessions</NavLink></li>
-                            </>
-                        )
-                    }
-                    {/* Tutor */}
+                    {!roleLoading && role === 'tutor' && (
+                        <>
+                            <li><NavLink to="/dashboard/create-study-session"><FaChalkboardTeacher className="inline-block mr-2" />Create Study Session</NavLink></li>
+                            <li><NavLink to="/dashboard/my-study-sessions"><FaClipboardList className="inline-block mr-2" />My Study Sessions</NavLink></li>
+                        </>
+                    )}
 
                     {/* Admin */}
-                    {
-                        !roleLoading && role === 'admin' && (
-                            <>
-                                <li><NavLink to="/dashboard/view-all-users">📂 View All Users</NavLink></li>
-                                <li><NavLink to="/dashboard/admin-view-all-study-sessions">📂 All Study Session</NavLink></li>
-                                <li><NavLink to="/dashboard/materials-list">📂 Meterials List</NavLink></li>
-                            </>
-                        )
-                    }
-                    {/* Admin */}
+                    {!roleLoading && role === 'admin' && (
+                        <>
+                            <li><NavLink to="/dashboard/view-all-users"><FaUserFriends className="inline-block mr-2" />View All Users</NavLink></li>
+                            <li><NavLink to="/dashboard/admin-view-all-study-sessions"><FaClipboardList className="inline-block mr-2" />All Study Session</NavLink></li>
+                            <li><NavLink to="/dashboard/materials-list"><FaBook className="inline-block mr-2" />Materials List</NavLink></li>
+                        </>
+                    )}
 
-                    {/* student */}
-                    {
-                        !roleLoading && role === 'student' && (
-                            <>
-                                <li><NavLink to="/dashboard/booked-sessions">📂 Booked Sessions</NavLink></li>
-                                <li><NavLink to="/dashboard/create-note">📂 Create Note</NavLink></li>
-                                <li><NavLink to="/dashboard/notes">📂 Notes</NavLink></li>
-                                <li><NavLink to="/dashboard/study-materials">📂 Study Materials</NavLink></li>
-                            </>
-                        )
-                    }
-                    {/* student */}
+                    {/* Student */}
+                    {!roleLoading && role === 'student' && (
+                        <>
+                            <li><NavLink to="/dashboard/booked-sessions"><FaBook className="inline-block mr-2" />Booked Sessions</NavLink></li>
+                            <li><NavLink to="/dashboard/create-note"><FaNoteSticky className="inline-block mr-2" />Create Note</NavLink></li>
+                            <li><NavLink to="/dashboard/notes"><FaFileAlt className="inline-block mr-2" />Notes</NavLink></li>
+                            <li><NavLink to="/dashboard/study-materials"><FaBook className="inline-block mr-2" />Study Materials</NavLink></li>
+                        </>
+                    )}
 
                     <div className="divider"></div>
 
-                    <li><Link to="/">🏠 Back to Home</Link></li>
-                    <li><button onClick={handleLogout}>🚪 Logout</button></li>
+                    <li><Link to="/"><FaHome className="inline-block mr-2" />Back to Home</Link></li>
+                    <li><button onClick={handleLogout}><FaSignOutAlt className="inline-block mr-2" />Logout</button></li>
                 </ul>
             </div>
         </div>

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { AuthContext } from '../context/AuthContextProvider';
 
 const axiosSecure = axios.create({
-    baseURL: `http://localhost:3000`,
+    baseURL: `https://student-colabroration-server.vercel.app`,
     withCredentials: true,
 });
 

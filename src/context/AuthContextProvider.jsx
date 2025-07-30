@@ -45,7 +45,7 @@ export default function AuthContextProvider({ children }) {
             setLoading(false)
             if (loggedUser?.email) {
                 const userEmailData = { email: loggedUser.email }
-                axios.post('http://localhost:3000/jwt', userEmailData, {withCredentials: true})
+                axios.post('https://student-colabroration-server.vercel.app/jwt', userEmailData, {withCredentials: true})
                     .then(res => {
                         console.log('get token from server', res.data.token);
                         const tokenData = res.data.token
