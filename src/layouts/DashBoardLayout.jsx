@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContextProvider";
 import useUserRole from "../hooks/useUserRole";
 import { FaBook, FaChalkboardTeacher, FaClipboardList, FaFileAlt, FaHome, FaSignOutAlt, FaUserFriends } from "react-icons/fa";
+import { FaNoteSticky } from "react-icons/fa6";
 
 export default function DashboardLayout() {
     const { user, logOutUser } = useContext(AuthContext);
