@@ -50,7 +50,7 @@ const UpcomingSessions = () => {
                             variants={cardVariants}
                             className="bg-[color:var(--color-base-100)] border border-[color:var(--color-base-300)] p-6 rounded-2xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
                         >
-                            <h3 className="font-bold text-[color:var(--color-accent)] text-2xl mb-3">
+                            <h3 className="font-bold text-[color:var(--color-accent)] text-lg mb-3">
                                 {session.title}
                             </h3>
                             <p className="text-sm text-neutral mb-2">

@@ -55,16 +55,16 @@ export default function MaterialsWithSessionList() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
         >
-            <h2 className="text-2xl font-bold mb-6 text-center text-primary">
+            <h2 className="text-2xl font-bold mb-6 text-center text-primary-content">
                 Materials with Study Session Title
             </h2>
 
             {materials.length === 0 ? (
-                <p className="text-center text-gray-500">No materials found.</p>
+                <p className="text-center text-neutral-content">No materials found.</p>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="table w-full table-zebra rounded-lg border border-gray-200 shadow-sm">
-                        <thead className="bg-primary text-white">
+                    <table className="table w-full rounded-lg border border-neutral shadow-sm">
+                        <thead className="bg-primary text-primary-content">
                             <tr>
                                 <th>#</th>
                                 <th>Material Title</th>
@@ -80,34 +80,34 @@ export default function MaterialsWithSessionList() {
                             {materials.map((mat, i) => (
                                 <tr
                                     key={mat._id}
-                                    className="hover:bg-gray-50 transition-colors duration-200"
+                                    className="hover:bg-base-200 transition-colors duration-200"
                                 >
-                                    <td>{i + 1}</td>
-                                    <td className="font-medium">{mat.title}</td>
+                                    <td className="text-base-content font-medium">{i + 1}</td>
+                                    <td className="text-primary font-semibold">{mat.title}</td>
                                     <td>
                                         <img
                                             src={mat.imageUrl}
                                             alt={mat.title}
-                                            className="w-10 h-10 object-cover rounded"
+                                            className="w-10 h-10 object-cover rounded shadow-sm"
                                         />
                                     </td>
-                                    <td>{mat.sessionTitle || "Unknown"}</td>
+                                    <td className="text-secondary-content font-medium">{mat.sessionTitle || "Unknown"}</td>
                                     <td>
                                         <a
                                             href={mat.driveLink}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="link link-primary underline"
+                                            className="underline text-accent font-medium"
                                         >
                                             Open Drive
                                         </a>
                                     </td>
-                                    <td>{mat.tutorEmail}</td>
-                                    <td>{new Date(mat.createdAt).toLocaleDateString()}</td>
+                                    <td className="text-base-content">{mat.tutorEmail}</td>
+                                    <td className="text-neutral-content">{new Date(mat.createdAt).toLocaleDateString()}</td>
                                     <td>
                                         <button
                                             onClick={() => handleDelete(mat._id)}
-                                            className="btn btn-xs btn-error"
+                                            className="btn btn-xs bg-error text-error-content border-none"
                                         >
                                             Delete
                                         </button>
