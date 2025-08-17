@@ -12,14 +12,12 @@ export default function UpdateStudySession() {
     const { register, handleSubmit, reset } = useForm();
     const axiosSecure = useAxiosSecureApi();
     const [loading, setLoading] = useState(false);
-    const { user } = useContext(AuthContext); // if needed
+    const { user } = useContext(AuthContext);
 
-    // ✅ Pre-fill form with existing session data
     useEffect(() => {
         axiosSecure.get(`/study-sessions/${sessionId}`)
             .then(res => {
                 const session = res.data;
-
                 reset({
                     title: session.title || "",
                     description: session.description || "",
@@ -38,7 +36,6 @@ export default function UpdateStudySession() {
             });
     }, [sessionId, axiosSecure, reset]);
 
-    // ✅ Submit handler
     const onSubmit = async (data) => {
         const updatedSession = {
             action: "update",
@@ -52,12 +49,10 @@ export default function UpdateStudySession() {
             status: data.status,
             registrationFee: parseFloat(data.registrationFee),
         };
-        console.log(updatedSession);
 
         try {
             setLoading(true);
             const res = await axiosSecure.patch(`/study-sessions/${sessionId}`, updatedSession);
-            console.log("Update response:", res.data);
             toast.success("Study session updated successfully");
             navigate("/dashboard/admin-view-all-study-sessions");
         } catch (error) {
@@ -70,7 +65,7 @@ export default function UpdateStudySession() {
 
     return (
         <motion.div
-            className="max-w-3xl mx-auto p-8 bg-base-100 shadow-xl rounded-xl"
+            className="max-w-3xl mx-auto p-8 bg-base-100 shadow-xl rounded-2xl"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -79,11 +74,11 @@ export default function UpdateStudySession() {
                 Update Study Session
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
                 {/* Title */}
                 <div>
-                    <label className="label"><span className="label-text">Session Title</span></label>
+                    <label className="label"><span className="label-text font-medium">Session Title</span></label>
                     <input
                         {...register("title")}
                         type="text"
@@ -95,20 +90,19 @@ export default function UpdateStudySession() {
 
                 {/* Description */}
                 <div>
-                    <label className="label"><span className="label-text">Session Description</span></label>
+                    <label className="label"><span className="label-text font-medium">Session Description</span></label>
                     <textarea
                         {...register("description")}
                         placeholder="Session Description"
                         className="textarea textarea-bordered w-full"
+                        rows={4}
                         required
                     />
                 </div>
 
                 {/* Registration Fee */}
                 <div>
-                    <label className="label">
-                        <span className="label-text">Registration Fee (TK)</span>
-                    </label>
+                    <label className="label"><span className="label-text font-medium">Registration Fee (TK)</span></label>
                     <input
                         {...register("registrationFee")}
                         type="number"
@@ -119,10 +113,9 @@ export default function UpdateStudySession() {
                     />
                 </div>
 
-
                 {/* Status */}
                 <div>
-                    <label className="label"><span className="label-text">Session Status</span></label>
+                    <label className="label"><span className="label-text font-medium">Session Status</span></label>
                     <select
                         {...register("status")}
                         className="select select-bordered w-full"
@@ -139,7 +132,7 @@ export default function UpdateStudySession() {
                     {["registrationStart", "registrationEnd", "classStart", "classEnd"].map((field, i) => (
                         <div key={i}>
                             <label className="label">
-                                <span className="label-text">
+                                <span className="label-text font-medium">
                                     {field.replace(/([A-Z])/g, " $1").replace(/^./, s => s.toUpperCase())}
                                 </span>
                             </label>
@@ -155,7 +148,7 @@ export default function UpdateStudySession() {
 
                 {/* Duration */}
                 <div>
-                    <label className="label"><span className="label-text">Session Duration</span></label>
+                    <label className="label"><span className="label-text font-medium">Session Duration</span></label>
                     <input
                         {...register("duration")}
                         type="text"

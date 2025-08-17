@@ -37,8 +37,8 @@ export default function AdminAllStudySessions() {
             const { value: formValues } = await Swal.fire({
                 title: "Set Registration Fee",
                 html: `
-                    <label class="block text-left">Is the session free or paid?</label>
-                    <select id="status" class="swal2-input">
+                    <label class="block text-left mb-1">Is the session free or paid?</label>
+                    <select id="status" class="swal2-input mb-2">
                         <option value="0">Free</option>
                         <option value="1">Paid</option>
                     </select>
@@ -116,22 +116,26 @@ export default function AdminAllStudySessions() {
         }
     };
 
-    // Filter sessions by selected status
     const filteredSessions =
         statusFilter === "all"
             ? sessions
             : sessions.filter((s) => s.status === statusFilter);
 
-    if (isLoading) return <p className="text-center"><Loading></Loading></p>;
+    if (isLoading)
+        return (
+            <div className="flex justify-center py-20">
+                <Loading />
+            </div>
+        );
 
     return (
         <div className="max-w-7xl mx-auto p-6">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-primary">All Study Sessions</h2>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-3">
+                <h2 className="text-3xl font-bold text-primary">All Study Sessions</h2>
                 <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="select select-bordered select-sm"
+                    className="select select-bordered select-sm w-full md:w-48"
                 >
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
@@ -141,10 +145,10 @@ export default function AdminAllStudySessions() {
             </div>
 
             {filteredSessions.length === 0 ? (
-                <p className="text-gray-500">No sessions to display.</p>
+                <p className="text-center text-gray-500 py-10 text-lg">No sessions to display.</p>
             ) : (
-                <div className="overflow-x-auto bg-base-100 rounded shadow">
-                    <table className="table table-zebra table-lg">
+                <div className="overflow-x-auto rounded-xl shadow-md border border-base-200">
+                    <table className="table w-full table-zebra">
                         <thead className="bg-primary text-white">
                             <tr>
                                 <th>#</th>
@@ -157,25 +161,27 @@ export default function AdminAllStudySessions() {
                         </thead>
                         <tbody>
                             {filteredSessions.map((session, index) => (
-                                <tr key={session._id}>
+                                <tr
+                                    key={session._id}
+                                    className="hover:bg-base-200 transition-colors duration-200"
+                                >
                                     <td>{index + 1}</td>
-                                    <td>{session.title}</td>
+                                    <td className="font-medium">{session.title}</td>
                                     <td>{session.tutorName}</td>
                                     <td>{session.registrationFee === 0 ? "Free" : `${session.registrationFee}৳`}</td>
                                     <td>
                                         <span
-                                            className={`badge ${
-                                                session.status === "pending"
+                                            className={`badge ${session.status === "pending"
                                                     ? "badge-warning"
                                                     : session.status === "approved"
-                                                    ? "badge-success"
-                                                    : "badge-error"
-                                            }`}
+                                                        ? "badge-success"
+                                                        : "badge-error"
+                                                }`}
                                         >
                                             {session.status}
                                         </span>
                                     </td>
-                                    <td className="space-x-2">
+                                    <td className="space-x-2 flex flex-wrap gap-1">
                                         {session.status === "pending" ? (
                                             <>
                                                 <button
@@ -193,7 +199,12 @@ export default function AdminAllStudySessions() {
                                             </>
                                         ) : (
                                             <>
-                                                <Link to={`/dashboard/update-session/${session._id}`} className="btn btn-xs btn-info">Update</Link>
+                                                <Link
+                                                    to={`/dashboard/update-session/${session._id}`}
+                                                    className="btn btn-xs btn-info"
+                                                >
+                                                    Update
+                                                </Link>
                                                 <button
                                                     onClick={() => handleDelete(session._id)}
                                                     className="btn btn-xs btn-outline btn-error"

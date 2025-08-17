@@ -46,23 +46,25 @@ export default function MaterialsWithSessionList() {
         });
     };
 
-    if (loading) return <p className="text-center mt-10"><Loading></Loading></p>;
+    if (loading) return <p className="text-center mt-10"><Loading /></p>;
 
     return (
         <motion.div
-            className="max-w-6xl mx-auto p-4"
+            className="max-w-6xl mx-auto p-6 bg-base-100 shadow-lg rounded-2xl"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
         >
-            <h2 className="text-2xl font-bold mb-4 text-center">Materials with Study Session Title</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center text-primary">
+                Materials with Study Session Title
+            </h2>
 
             {materials.length === 0 ? (
-                <p className="text-center">No materials found.</p>
+                <p className="text-center text-gray-500">No materials found.</p>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="table w-full table-zebra">
-                        <thead>
+                    <table className="table w-full table-zebra rounded-lg border border-gray-200 shadow-sm">
+                        <thead className="bg-primary text-white">
                             <tr>
                                 <th>#</th>
                                 <th>Material Title</th>
@@ -74,17 +76,19 @@ export default function MaterialsWithSessionList() {
                                 <th>Actions</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             {materials.map((mat, i) => (
-                                <tr key={mat._id}>
+                                <tr
+                                    key={mat._id}
+                                    className="hover:bg-gray-50 transition-colors duration-200"
+                                >
                                     <td>{i + 1}</td>
-                                    <td>{mat.title}</td>
+                                    <td className="font-medium">{mat.title}</td>
                                     <td>
                                         <img
                                             src={mat.imageUrl}
                                             alt={mat.title}
-                                            className="w-8 h-8 object-cover rounded"
+                                            className="w-10 h-10 object-cover rounded"
                                         />
                                     </td>
                                     <td>{mat.sessionTitle || "Unknown"}</td>
@@ -93,7 +97,7 @@ export default function MaterialsWithSessionList() {
                                             href={mat.driveLink}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className="link link-primary"
+                                            className="link link-primary underline"
                                         >
                                             Open Drive
                                         </a>
@@ -111,7 +115,6 @@ export default function MaterialsWithSessionList() {
                                 </tr>
                             ))}
                         </tbody>
-
                     </table>
                 </div>
             )}
