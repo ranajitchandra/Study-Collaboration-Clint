@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import useAxiosSecureApi from "../hooks/useAxiosSecureApi";
-import Loading from "../components/Loading";
+import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
 import {
     PieChart, Pie, Cell, Tooltip,
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend
 } from "recharts";
+import Loading from "../../../components/Loading";
 
 const COLORS = ["#FFB703", "#E63825", "#262261", "#FF9B00"];
 
