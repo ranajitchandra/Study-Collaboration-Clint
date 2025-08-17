@@ -7,7 +7,7 @@ import useAxiosSecureApi from "../../../hooks/useAxiosSecureApi";
 
 export default function UploadMaterials() {
     const { user } = useContext(AuthContext);
-    const { id :sessionId } = useParams(); // get sessionId from route
+    const { id: sessionId } = useParams();
     const axiosSecure = useAxiosSecureApi();
     const { register, handleSubmit, reset } = useForm();
     const [uploading, setUploading] = useState(false);
@@ -17,7 +17,6 @@ export default function UploadMaterials() {
         try {
             setUploading(true);
 
-            // Upload image to ImgBB
             const imageFile = data.image[0];
             const formData = new FormData();
             formData.append("image", imageFile);
@@ -30,7 +29,7 @@ export default function UploadMaterials() {
             const imgData = await res.json();
 
             if (!imgData.success) throw new Error("Image upload failed");
-            
+
             const material = {
                 title: data.title,
                 sessionId,
@@ -38,14 +37,13 @@ export default function UploadMaterials() {
                 imageUrl: imgData.data.display_url,
                 driveLink: data.driveLink,
             };
-            console.log(sessionId, "--", material);
 
             const response = await axiosSecure.post("/materials", material);
 
             if (response.data.insertedId) {
                 toast.success("Material uploaded successfully");
                 reset();
-                navigate("/dashboard/my-study-sessions")
+                navigate("/dashboard/my-study-sessions");
             } else {
                 toast.error("Failed to upload material");
             }
@@ -58,59 +56,61 @@ export default function UploadMaterials() {
     };
 
     return (
-        <div className="max-w-xl mx-auto p-6 bg-base-100 shadow rounded">
-            <h2 className="text-2xl font-bold text-primary mb-4">Upload Material</h2>
+        <div className="max-w-xl mx-auto p-8 bg-base-100 shadow-lg rounded-2xl">
+            <h2 className="text-3xl font-bold text-primary text-center mb-6">
+                Upload Material
+            </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 {/* Title */}
                 <div>
-                    <label className="label">Title</label>
+                    <label className="block font-semibold mb-1 text-base-content">Title</label>
                     <input
                         {...register("title", { required: true })}
                         type="text"
                         placeholder="Material Title"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary/50"
                     />
                 </div>
 
                 {/* Tutor Email */}
                 <div>
-                    <label className="label">Tutor Email</label>
+                    <label className="block font-semibold mb-1 text-base-content">Tutor Email</label>
                     <input
                         type="email"
                         defaultValue={user?.email}
                         readOnly
-                        className="input input-bordered w-full bg-gray-100"
+                        className="input input-bordered w-full bg-base-200 text-base-content cursor-not-allowed"
                     />
                 </div>
 
                 {/* Image Upload */}
                 <div>
-                    <label className="label">Upload Image</label>
+                    <label className="block font-semibold mb-1 text-base-content">Upload Image</label>
                     <input
                         {...register("image", { required: true })}
                         type="file"
                         accept="image/*"
-                        className="file-input file-input-bordered w-full"
+                        className="file-input file-input-bordered w-full focus:outline-none focus:ring-2 focus:ring-accent/50"
                     />
                 </div>
 
                 {/* Google Drive Link */}
                 <div>
-                    <label className="label">Google Drive Link</label>
+                    <label className="block font-semibold mb-1 text-base-content">Google Drive Link</label>
                     <input
                         {...register("driveLink", { required: true })}
                         type="url"
                         placeholder="https://drive.google.com/..."
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-accent/50"
                     />
                 </div>
 
                 <button
                     type="submit"
-                    className={`btn btn-primary w-full ${uploading ? "btn-disabled" : ""}`}
+                    className={`btn btn-primary w-full text-lg font-semibold rounded-xl shadow-md ${uploading ? "btn-disabled" : ""}`}
                 >
-                    {uploading ? "Uploading..." : "Upload"}
+                    {uploading ? "Uploading..." : "Upload Material"}
                 </button>
             </form>
         </div>
