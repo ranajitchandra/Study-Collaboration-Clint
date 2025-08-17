@@ -5,7 +5,7 @@ import Login from "../pages/auth/Login";
 import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import DashboardLayout from "../layouts/DashBoardLayout";
-import DashBoardHome from "../pages/dashboard/DashBoardHome";
+import DashBoardHome from "../pages/dashboard/dashBoardHome/DashBoardHome";
 import CreateStudySession from "../pages/dashboard/tutor/CreateStudySession";
 import MyStudySessions from "../pages/dashboard/tutor/MyStudySession";
 import UploadMaterials from "../pages/dashboard/tutor/UploadMaterials";
