@@ -17,25 +17,25 @@ export default function TutorsList() {
             .catch(() => setLoading(false));
     }, [axiosSecure]);
 
-    if (loading) return <p className="text-center"><Loading></Loading></p>;
+    if (loading) return <p className="text-center py-10"><Loading /></p>;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
             {tutors.map((tutor, index) => (
                 <motion.div
                     key={tutor._id}
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1, duration: 0.4 }}
-                    className="bg-white p-4 rounded-xl shadow hover:shadow-lg transition-all"
+                    className="bg-base-200 p-6 rounded-2xl shadow-md hover:shadow-xl transition-all flex flex-col items-center"
                 >
                     <img
                         src={tutor.photoURL}
                         alt={tutor.name}
-                        className="w-24 h-24 rounded-full mx-auto object-cover"
+                        className="w-24 h-24 rounded-full object-cover border-2 border-neutral"
                     />
-                    <h2 className="text-xl font-semibold text-center mt-3">{tutor.name}</h2>
-                    <p className="text-center text-gray-500">{tutor.email}</p>
+                    <h2 className="text-xl font-semibold text-primary mt-4">{tutor.name}</h2>
+                    <p className="text-sm text-base-content mt-1">{tutor.email}</p>
                 </motion.div>
             ))}
         </div>

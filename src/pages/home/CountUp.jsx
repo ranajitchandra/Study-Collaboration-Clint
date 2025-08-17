@@ -18,12 +18,11 @@ export default function UserStatsSection() {
 
     useEffect(() => {
         axios
-            .get("https://student-colabroration-server.vercel.app/user-stats") // Replace with your API URL
+            .get("https://student-colabroration-server.vercel.app/user-stats")
             .then((res) => setStats(res.data))
             .catch((err) => console.error("Error fetching stats:", err));
     }, []);
 
-    // Keep track of which cards are in viewport to reset count
     const [visibleCards, setVisibleCards] = useState({});
 
     const statItems = stats
@@ -31,27 +30,26 @@ export default function UserStatsSection() {
             {
                 label: "Total Users",
                 value: stats.totalUsers,
-                color: "text-blue-600",
-                icon: <FaUsers size={40} className="mx-auto mb-2" />,
+                icon: <FaUsers size={40} className="mx-auto mb-2 text-primary" />,
             },
             {
                 label: "Total Tutors",
                 value: stats.totalTutors,
-                color: "text-green-600",
-                icon: <FaChalkboardTeacher size={40} className="mx-auto mb-2" />,
+                icon: (
+                    <FaChalkboardTeacher size={40} className="mx-auto mb-2 text-primary" />
+                ),
             },
             {
                 label: "Total Students",
                 value: stats.totalStudents + 1,
-                color: "text-purple-600",
-                icon: <FaUserGraduate size={40} className="mx-auto mb-2" />,
+                icon: <FaUserGraduate size={40} className="mx-auto mb-2 text-primary" />,
             },
         ]
         : [];
 
     return (
         <section className="my-20 px-4 md:px-8 text-center">
-            <h2 className="text-2xl font-bold text-black mb-20">Platform Statistics</h2>
+            <h2 className="text-2xl font-bold text-primary mb-20">Platform Statistics</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {statItems.map((item, idx) => (
@@ -63,7 +61,7 @@ export default function UserStatsSection() {
                         viewport={{ once: false, amount: 0.3 }}
                         variants={cardVariants}
                         whileHover={{ scale: 1.05 }}
-                        className="bg-white shadow-md p-6 rounded-2xl cursor-pointer"
+                        className="bg-base-100 shadow-md p-6 rounded-2xl cursor-pointer border border-base-300"
                         onViewportEnter={() =>
                             setVisibleCards((prev) => ({ ...prev, [idx]: Date.now() }))
                         }
@@ -72,8 +70,7 @@ export default function UserStatsSection() {
                         }
                     >
                         {item.icon}
-                        <h3 className={`text-4xl font-bold ${item.color}`}>
-                            {/* Use key to force re-mount countUp when entering viewport */}
+                        <h3 className="text-4xl font-bold text-neutral">
                             <CountUp
                                 key={visibleCards[idx] || "hidden"}
                                 end={item.value}
@@ -81,7 +78,7 @@ export default function UserStatsSection() {
                                 separator=","
                             />
                         </h3>
-                        <p className="text-gray-600 mt-2">{item.label}</p>
+                        <p className="text-neutral mt-2">{item.label}</p>
                     </motion.div>
                 ))}
             </div>

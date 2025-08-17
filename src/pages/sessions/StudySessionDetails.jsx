@@ -15,11 +15,8 @@ export default function StudySessionDetails() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
-    const { role, roleLoading } = useUserRole()
+    const { role, roleLoading } = useUserRole();
     const navigate = useNavigate();
-
-    console.log(session);
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -51,24 +48,20 @@ export default function StudySessionDetails() {
         return new Date() > new Date(session.registrationEnd);
     };
 
-    if (loading) return <div className="text-center py-10"><Loading></Loading></div>;
-    if (!session) return <div className="text-center py-10">Session not found</div>;
-
-
-
+    if (loading)
+        return (
+            <div className="text-center py-10">
+                <Loading />
+            </div>
+        );
+    if (!session)
+        return <div className="text-center py-10 text-neutral-content">Session not found</div>;
 
     const handleBooking = async () => {
-
         if (session.registrationFee > 0) {
-            // redirect to payment page with session info
-            // Paid session: Check if already booked
             const res = await axiosSecure.get("/booked-sessions", {
-                params: {
-                    sessionId: session._id,
-                    studentEmail: user.email,
-                },
+                params: { sessionId: session._id, studentEmail: user.email },
             });
-
             if (res.data) {
                 Swal.fire({
                     icon: "info",
@@ -77,10 +70,7 @@ export default function StudySessionDetails() {
                 });
                 return;
             }
-
-            // Not booked yet — go to payment
             navigate(`/payment/${session._id}`);
-
         } else {
             try {
                 const bookingData = {
@@ -102,27 +92,41 @@ export default function StudySessionDetails() {
         }
     };
 
-
-
-
     return (
         <motion.div
-            className="max-w-2xl mx-auto p-6 border rounded-md shadow bg-white my-8"
+            className="max-w-3xl mx-auto p-6 bg-base-100 border border-neutral rounded-2xl shadow-lg my-8"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <h2 className="text-3xl font-bold text-center mb-6">{session.title}</h2>
+            <h2 className="text-3xl font-bold text-center text-primary mb-6">{session.title}</h2>
 
-            <div className="space-y-3 text-gray-700">
-                <p><strong>Tutor Name:</strong> {session.tutorName}</p>
-                <p><strong>Average Rating:</strong> {getAverageRating()}</p>
-                <p><strong>Description:</strong> {session.description}</p>
-                <p><strong>Registration Start:</strong> {format(new Date(session.registrationStart), "PPP")}</p>
-                <p><strong>Registration End:</strong> {format(new Date(session.registrationEnd), "PPP")}</p>
-                <p><strong>Class Start:</strong> {format(new Date(session.classStart), "PPP")}</p>
-                <p><strong>Class End:</strong> {format(new Date(session.classEnd), "PPP")}</p>
-                <p><strong>Duration:</strong> {session.duration}</p>
+            <div className="space-y-3 text-base-content">
+                <p>
+                    <strong>Tutor Name:</strong> {session.tutorName}
+                </p>
+                <p>
+                    <strong>Average Rating:</strong> {getAverageRating()}
+                </p>
+                <p>
+                    <strong>Description:</strong> {session.description}
+                </p>
+                <p>
+                    <strong>Registration Start:</strong>{" "}
+                    {format(new Date(session.registrationStart), "PPP")}
+                </p>
+                <p>
+                    <strong>Registration End:</strong> {format(new Date(session.registrationEnd), "PPP")}
+                </p>
+                <p>
+                    <strong>Class Start:</strong> {format(new Date(session.classStart), "PPP")}
+                </p>
+                <p>
+                    <strong>Class End:</strong> {format(new Date(session.classEnd), "PPP")}
+                </p>
+                <p>
+                    <strong>Duration:</strong> {session.duration}
+                </p>
                 <p className="mb-4">
                     <strong>Registration Fee:</strong>{" "}
                     {session.registrationFee === 0 ? "Free" : `$${session.registrationFee}`}
@@ -137,7 +141,7 @@ export default function StudySessionDetails() {
                     role === "tutor" ||
                     isRegistrationClosed()
                 }
-                className={`btn btn-primary ${roleLoading || role === "admin" || role === "tutor" || isRegistrationClosed()
+                className={`btn btn-primary mt-4 w-full ${roleLoading || role === "admin" || role === "tutor" || isRegistrationClosed()
                         ? "btn-disabled"
                         : ""
                     }`}
@@ -151,28 +155,23 @@ export default function StudySessionDetails() {
                             : "Book Now"}
             </button>
 
-
-            {/* Reviews */}
+            {/* Reviews Section */}
             <div className="mt-10">
-                <h3 className="text-xl font-semibold mb-4">Student Reviews</h3>
+                <h3 className="text-xl font-semibold mb-4 text-primary">Student Reviews</h3>
                 {reviews.length === 0 ? (
-                    <p className="text-gray-500">No reviews yet.</p>
+                    <p className="text-neutral-content">No reviews yet.</p>
                 ) : (
                     <div className="space-y-4">
                         {reviews.map((review) => (
                             <div
                                 key={review._id}
-                                className="border p-4 rounded bg-gray-50"
+                                className="border border-neutral p-4 rounded-xl bg-base-200 shadow-sm"
                             >
-                                <p className="text-sm text-gray-700">
-                                    <strong>{review.studentName || "Anonymous"}:</strong>
+                                <p className="text-sm text-base-content font-medium">
+                                    {review.studentName || "Anonymous"}
                                 </p>
-                                <p className="text-sm text-yellow-600">
-                                    Rating: {review.rating} / 5
-                                </p>
-                                <p className="text-sm text-primary  ">
-                                    Rating: {review.reviewText}
-                                </p>
+                                <p className="text-yellow-500 text-sm">Rating: {review.rating} / 5</p>
+                                <p className="text-base-content text-sm mt-1">{review.reviewText}</p>
                             </div>
                         ))}
                     </div>

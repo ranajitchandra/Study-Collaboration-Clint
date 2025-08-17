@@ -16,6 +16,7 @@ export default function HomeLayout(){
             <Slider></Slider>
             <AvailableStudySessions></AvailableStudySessions>
             <TopRatedSessions></TopRatedSessions>
+            <UpcomingSessions></UpcomingSessions>
             <StudentSuccessStories></StudentSuccessStories>
             <UserStatsSection></UserStatsSection>
             <BannerSection></BannerSection>

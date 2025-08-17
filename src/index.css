@@ -5,24 +5,53 @@
 }
 
 
-/* @plugin "daisyui/theme" {
-  name: "light";
-  default: true;
-  --color-primary: #0077B6;
-  --color-secondary: #90E0EF;
-  --color-accent: #FFB703;
-} */
 
 
 
 @plugin "daisyui/theme" {
   name: "light";
-  default: true;
-  --color-primary: #7A785F;    /* muted sage green */
-  --color-secondary: #F8EEFA;  /* warm beige */
-  --color-accent: #8F8D6B;     /* same as secondary for subtle accent */
-}
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
 
+  --color-base-100: oklch(97% 0.0035 67.78);   /* lightest */
+  --color-base-200: oklch(94.5% 0.006 65);     /* slightly toned */
+  --color-base-300: oklch(91% 0.008 60);       /* subtle UI layers */
+  --color-base-content: oklch(30% 0.01 50);    /* dark readable content */
+
+  --color-primary: oklch(33% 0.04 250);        /* cool muted blue-violet */
+  --color-primary-content: oklch(98% 0.01 0);  /* white */
+
+  --color-secondary: oklch(45% 0.08 80);       /* soft earthy green-beige */
+  --color-secondary-content: oklch(95% 0.01 90);
+
+  --color-accent: oklch(60% 0.1 200);          /* bluish accent */
+  --color-accent-content: oklch(15% 0.02 200);
+
+  --color-neutral: oklch(22% 0.005 70);        /* borders / outlines */
+  --color-neutral-content: oklch(92% 0.005 70);
+
+  --color-info: oklch(75% 0.12 240);
+  --color-info-content: oklch(25% 0.03 240);
+
+  --color-success: oklch(78% 0.14 140);
+  --color-success-content: oklch(22% 0.04 140);
+
+  --color-warning: oklch(85% 0.15 80);
+  --color-warning-content: oklch(30% 0.08 70);
+
+  --color-error: oklch(70% 0.18 25);
+  --color-error-content: oklch(20% 0.09 25);
+
+  --radius-selector: 1.5rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
 
 
 
@@ -30,11 +59,52 @@
 @plugin "daisyui/theme" {
   name: "dark";
   default: false;
+  prefersdark: true;
   color-scheme: "dark";
-  --color-primary: #00B4D8;
-  --color-secondary: #03045E;
-  --color-accent: #FFD166;
+
+  --color-base-100: oklch(21% 0.006 56);        /* dark UI bg */
+  --color-base-200: oklch(14% 0.004 49);
+  --color-base-300: oklch(7% 0.002 45);
+  --color-base-content: oklch(88% 0.005 60);    /* light text */
+
+  --color-primary: oklch(78% 0.18 70);          /* warm tone */
+  --color-primary-content: oklch(20% 0.02 60);  /* dark text on light btn */
+
+  --color-secondary: oklch(55% 0.2 305);        /* pink-purple */
+  --color-secondary-content: oklch(92% 0.01 305);
+
+  --color-accent: oklch(65% 0.18 180);          /* teal accent */
+  --color-accent-content: oklch(10% 0.02 180);
+
+  --color-neutral: oklch(24% 0.02 70);
+  --color-neutral-content: oklch(90% 0.005 60);
+
+  --color-info: oklch(60% 0.18 260);
+  --color-info-content: oklch(94% 0.01 260);
+
+  --color-success: oklch(66% 0.15 140);
+  --color-success-content: oklch(16% 0.03 140);
+
+  --color-warning: oklch(70% 0.17 80);
+  --color-warning-content: oklch(20% 0.04 80);
+
+  --color-error: oklch(68% 0.20 30);
+  --color-error-content: oklch(15% 0.05 30);
+
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
 }
+
+
+
+
+
 
 /* When theme is dark */
 [data-theme="dark"] a.active {
