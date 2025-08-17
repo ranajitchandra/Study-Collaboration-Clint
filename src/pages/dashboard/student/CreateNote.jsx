@@ -18,7 +18,7 @@ export default function CreateNote() {
         const note = {
             email: user?.email,
             title,
-            description
+            description,
         };
 
         try {
@@ -27,7 +27,7 @@ export default function CreateNote() {
                 Swal.fire('Success', 'Note created successfully!', 'success');
                 setTitle('');
                 setDescription('');
-                navigate('/dashboard/notes'); 
+                navigate('/dashboard/notes');
             }
         } catch (error) {
             Swal.fire('Error', 'Failed to create note', 'error');
@@ -35,43 +35,69 @@ export default function CreateNote() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6 shadow-lg bg-white rounded-lg mt-6">
-            <h2 className="text-2xl font-bold mb-4">Create New Note</h2>
-            <form onSubmit={handleNoteSubmit} className="space-y-4">
-                <div>
-                    <label className="block font-semibold mb-1">Email</label>
-                    <input
-                        type="email"
-                        value={user?.email || ''}
-                        readOnly
-                        className="input input-bordered w-full"
-                    />
-                </div>
+        <div className="max-w-2xl mx-auto mt-12 px-4">
+            <div className="card bg-base-100 shadow-lg border border-base-200 rounded-2xl">
+                <div className="card-body">
+                    {/* Title */}
+                    <h2 className="text-3xl font-extrabold text-base-content text-center mb-6">
+                        Create New Note
+                    </h2>
 
-                <div>
-                    <label className="block font-semibold mb-1">Title</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="input input-bordered w-full"
-                        required
-                    />
-                </div>
+                    {/* Form */}
+                    <form onSubmit={handleNoteSubmit} className="space-y-6">
+                        {/* Email */}
+                        <div>
+                            <label className="block text-sm font-semibold text-base-content mb-2">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                value={user?.email || ''}
+                                readOnly
+                                className="input input-bordered w-full bg-base-200 text-base-content font-medium cursor-not-allowed"
+                            />
+                        </div>
 
-                <div>
-                    <label className="block font-semibold mb-1">Description</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="textarea textarea-bordered w-full"
-                        rows="5"
-                        required
-                    />
-                </div>
+                        {/* Note Title */}
+                        <div>
+                            <label className="block text-sm font-semibold text-base-content mb-2">
+                                Title
+                            </label>
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                placeholder="Enter note title"
+                                required
+                            />
+                        </div>
 
-                <button type="submit" className="btn btn-primary w-full">Create Note</button>
-            </form>
+                        {/* Note Description */}
+                        <div>
+                            <label className="block text-sm font-semibold text-base-content mb-2">
+                                Description
+                            </label>
+                            <textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                className="textarea textarea-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                placeholder="Write your note here..."
+                                rows="6"
+                                required
+                            />
+                        </div>
+
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            className="btn btn-primary w-full rounded-xl text-lg font-semibold shadow-md hover:shadow-lg transition-all"
+                        >
+                            Create Note
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 }

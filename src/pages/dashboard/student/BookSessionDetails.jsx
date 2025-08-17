@@ -50,55 +50,101 @@ export default function BookedSessionDetails() {
             Swal.fire('Success', 'Review submitted!', 'success');
             setReviewText('');
             setRating(5);
-            refetchReviews(); // 🔁 Update the review list after submission
+            refetchReviews();
         }
     };
 
-    if (isLoading) return <p><Loading></Loading></p>;
+    if (isLoading) return <p><Loading /></p>;
 
     return (
-        <div className="p-6 space-y-6">
-            <h2 className="text-3xl font-bold">{sessionDetails.title}</h2>
-            <p><strong>Tutor:</strong> {sessionDetails.tutorEmail}</p>
-            <p><strong>Description:</strong> {sessionDetails.description}</p>
-            <p><strong>Fee:</strong> {sessionDetails.registrationFee === 0 ? 'Free' : `$${sessionDetails.registrationFee}`}</p>
+        <div className="p-6 max-w-5xl mx-auto space-y-8 bg-base-100 text-base-content">
 
-            <div className="mt-6">
-                <h3 className="text-2xl font-semibold">Submit Your Review</h3>
-                <textarea
-                    className="textarea textarea-bordered w-full"
-                    value={reviewText}
-                    onChange={(e) => setReviewText(e.target.value)}
-                    placeholder="Write your review..."
-                />
-                <input
-                    type="number"
-                    min="1"
-                    max="5"
-                    className="input input-bordered w-24 mt-2"
-                    value={rating}
-                    onChange={(e) => setRating(parseInt(e.target.value))}
-                />
-                <button onClick={handleSubmitReview} className="btn btn-primary ml-4 mt-2">Submit Review</button>
+            {/* Session Info Card */}
+            <div className="card shadow-md bg-white border rounded-2xl">
+                <div className="card-body">
+                    <h2 className="card-title text-3xl font-bold">{sessionDetails.title}</h2>
+                    <p><span className="font-semibold">Tutor:</span> {sessionDetails.tutorEmail}</p>
+                    <p><span className="font-semibold">Description:</span> {sessionDetails.description}</p>
+                    <p>
+                        <span className="font-semibold">Fee:</span>{" "}
+                        {sessionDetails.registrationFee === 0 ? (
+                            <span className="badge badge-success">Free</span>
+                        ) : (
+                            <span className="badge badge-info">${sessionDetails.registrationFee}</span>
+                        )}
+                    </p>
+                </div>
             </div>
 
+            {/* Review Form */}
+            <div className="card shadow-sm bg-white border rounded-2xl">
+                <div className="card-body">
+                    <h3 className="text-2xl font-semibold mb-4">Submit Your Review</h3>
+
+                    <textarea
+                        className="textarea textarea-bordered w-full resize-none"
+                        rows={4}
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        placeholder="Write your review..."
+                    />
+
+                    {/* Rating Stars */}
+                    <div className="flex items-center gap-2 mt-3">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                                key={star}
+                                type="button"
+                                className={`text-2xl ${star <= rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                onClick={() => setRating(star)}
+                            >
+                                ★
+                            </button>
+                        ))}
+                        <span className="ml-2 text-sm text-gray-500">{rating} / 5</span>
+                    </div>
+
+                    <button
+                        onClick={handleSubmitReview}
+                        className="btn btn-primary mt-4 w-fit"
+                    >
+                        Submit Review
+                    </button>
+                </div>
+            </div>
+
+            {/* Reviews List */}
             <div className="mt-10">
-                <h3 className="text-xl font-bold mb-4">Reviews</h3>
+                <h3 className="text-2xl font-bold mb-6">Reviews</h3>
                 {reviews.length === 0 ? (
-                    <p>No reviews yet.</p>
+                    <p className="text-gray-500">No reviews yet.</p>
                 ) : (
-                    reviews.map((r) => (
-                        <div key={r._id} className="border p-3 rounded mb-3">
-                            <div className="flex items-center gap-3">
-                                <img src={r.studentPhoto} alt="User" className="w-10 h-10 rounded-full" />
-                                <div>
-                                    <p className="font-semibold">{r.studentName}</p>
-                                    <p className="text-sm text-gray-500">Rating: {r.rating}★</p>
+                    <div className="grid gap-4">
+                        {reviews.map((r) => (
+                            <div
+                                key={r._id}
+                                className="p-4 border rounded-xl shadow-sm bg-white"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <img
+                                        src={r.studentPhoto}
+                                        alt="User"
+                                        className="w-12 h-12 rounded-full border"
+                                    />
+                                    <div>
+                                        <p className="font-semibold">{r.studentName}</p>
+                                        <p className="text-sm text-yellow-500">
+                                            {"★".repeat(r.rating)}{" "}
+                                            <span className="text-gray-400">
+                                                {"★".repeat(5 - r.rating)}
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
+                                <p className="mt-3 text-gray-700">{r.reviewText}</p>
                             </div>
-                            <p className="mt-2">{r.reviewText}</p>
-                        </div>
-                    ))
+                        ))}
+                    </div>
                 )}
             </div>
         </div>

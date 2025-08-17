@@ -49,23 +49,28 @@ export default function MyNotes() {
 
     return (
         <div className="max-w-3xl mx-auto p-6">
-            <h2 className="text-2xl font-bold mb-4">My Notes</h2>
+            <h2 className="text-3xl font-extrabold text-base-content mb-6 text-center">
+                📝 My Notes
+            </h2>
 
             {notes.length === 0 ? (
-                <p className="text-gray-500">No notes found.</p>
+                <p className="text-gray-500 text-center mt-8">No notes found.</p>
             ) : (
-                <>
-                    {notes.map(note => (
-                        <div key={note._id} className="bg-white p-4 rounded shadow mb-4">
+                <div className="space-y-4">
+                    {notes.map((note) => (
+                        <div
+                            key={note._id}
+                            className="bg-base-100 border border-base-200 shadow-lg rounded-xl p-4"
+                        >
                             {editingNote && editingNote._id === note._id ? (
-                                <form onSubmit={handleUpdate}>
+                                <form onSubmit={handleUpdate} className="space-y-3">
                                     <input
                                         type="text"
                                         value={editingNote.title}
                                         onChange={(e) =>
                                             setEditingNote({ ...editingNote, title: e.target.value })
                                         }
-                                        className="input input-bordered w-full mb-2"
+                                        className="input input-bordered w-full focus:ring-2 focus:ring-primary/40"
                                         required
                                     />
                                     <textarea
@@ -73,40 +78,46 @@ export default function MyNotes() {
                                         onChange={(e) =>
                                             setEditingNote({ ...editingNote, description: e.target.value })
                                         }
-                                        className="textarea textarea-bordered w-full mb-2"
+                                        className="textarea textarea-bordered w-full focus:ring-2 focus:ring-primary/40"
                                         rows={4}
                                         required
                                     />
-                                    <button className="btn btn-primary mr-2" type="submit">Save</button>
-                                    <button
-                                        className="btn"
-                                        type="button"
-                                        onClick={() => setEditingNote(null)}
-                                    >
-                                        Cancel
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button className="btn btn-primary flex-1" type="submit">
+                                            Save
+                                        </button>
+                                        <button
+                                            className="btn flex-1"
+                                            type="button"
+                                            onClick={() => setEditingNote(null)}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
                                 </form>
                             ) : (
                                 <>
-                                    <h3 className="font-bold text-lg">{note.title}</h3>
-                                    <p className="text-gray-700 mb-2">{note.description}</p>
-                                    <button
-                                        className="btn btn-sm btn-outline mr-2"
-                                        onClick={() => setEditingNote(note)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-sm btn-error text-white"
-                                        onClick={() => handleDelete(note._id)}
-                                    >
-                                        Delete
-                                    </button>
+                                    <h3 className="font-bold text-lg text-base-content">{note.title}</h3>
+                                    <p className="text-base-content/80 mb-3">{note.description}</p>
+                                    <div className="flex justify-items-start gap-2">
+                                        <button
+                                            className="btn btn-sm btn-outline"
+                                            onClick={() => setEditingNote(note)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-sm btn-error text-white"
+                                            onClick={() => handleDelete(note._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
                                 </>
                             )}
                         </div>
                     ))}
-                </>
+                </div>
             )}
         </div>
     );
